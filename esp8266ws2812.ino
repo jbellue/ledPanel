@@ -1,8 +1,8 @@
 #include <WebSocketsServer.h>
 #include <ESP8266WebServer.h>
 #include <ArduinoJson.h>
+#include <WiFiManager.h>
 #include "patternsManager.h"
-#include "wifiCredentials.h"
 
 #define LED_PIN   D4
 #define LED_COUNT 12
@@ -101,15 +101,9 @@ void setup() {
 
     Serial.begin(115200);
 
-    // init WiFi
-    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-    WiFi.mode(WIFI_STA);
+    WiFiManager wifiManager;
+    wifiManager.autoConnect();
 
-    Serial.print("Connecting to " WIFI_SSID);
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.print(".");
-    }
     Serial.print("\nServer IP is ");
     Serial.println(WiFi.localIP());
 
