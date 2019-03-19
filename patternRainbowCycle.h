@@ -17,13 +17,12 @@ public:
 };
 
 patternRainbowCycle::patternRainbowCycle(Adafruit_NeoPixel * strip) :
-    Pattern(strip, 20, 255, 0x000000, 0x000000, "Rainbow Cycle"),
-    _ledsPerSegment(_strip->numPixels()) {
-    }
+    patternRainbowCycle(strip, strip->numPixels()) {}
+
 patternRainbowCycle::patternRainbowCycle(Adafruit_NeoPixel * strip, const uint16_t ledPerSegment) :
     Pattern(strip, 20, 255, 0x000000, 0x000000, "Rainbow Cycle"),
     _ledsPerSegment(ledPerSegment) {
-    }
+}
 
 void patternRainbowCycle::start() {
     update(0);
