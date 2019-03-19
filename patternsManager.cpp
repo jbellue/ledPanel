@@ -15,7 +15,7 @@ void PatternsManager::begin() {
     _patterns[PLAIN] = new patternPlain(_strip);
     _patterns[BLINK] = new patternBlink(_strip);
     _patterns[PLAIN_RAINBOW] = new patternPlainRainbow(_strip);
-    _patterns[RAINBOW_CYCLE] = new patternRainbowCycle(_strip);
+    _patterns[RAINBOW_CYCLE] = new patternRainbowCycle(_strip, 4);
 }
 
 void PatternsManager::update() {

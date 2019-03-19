@@ -7,28 +7,31 @@
 class patternRainbowCycle : public Pattern
 {
 private:
-    static const uint8_t _segmentCount = 3;
-    static const uint16_t _ledsPerSegment = 4;
+    uint16_t _ledsPerSegment;
 public:
     patternRainbowCycle(Adafruit_NeoPixel * strip);
+    patternRainbowCycle(Adafruit_NeoPixel * strip, const uint16_t ledPerSegment);
     void update(const uint16_t index);
     void start();
     uint16_t interval();
 };
 
 patternRainbowCycle::patternRainbowCycle(Adafruit_NeoPixel * strip) :
-    Pattern(strip, 20, 255, 0x000000, 0x000000, "Rainbow Cycle") {
+    Pattern(strip, 20, 255, 0x000000, 0x000000, "Rainbow Cycle"),
+    _ledsPerSegment(_strip->numPixels()) {
+    }
+patternRainbowCycle::patternRainbowCycle(Adafruit_NeoPixel * strip, const uint16_t ledPerSegment) :
+    Pattern(strip, 20, 255, 0x000000, 0x000000, "Rainbow Cycle"),
+    _ledsPerSegment(ledPerSegment) {
     }
 
 void patternRainbowCycle::start() {
     update(0);
 }
 void patternRainbowCycle::update(const uint16_t index) {
-    const uint16_t _segments[_segmentCount][_ledsPerSegment] = {{0, 1, 2, 3}, {4, 5, 6, 7}, {8, 9, 10, 11}};
-    for(uint8_t i = 0; i < _segmentCount; ++i) {
-        for(uint16_t j = 0; j < _ledsPerSegment; ++j) {
-            _strip->setPixelColor(_segments[i][j], colourWheel((j * 256 / _ledsPerSegment + index) & 255));
-        }
+    const uint16_t ledCount = _strip->numPixels();
+    for(uint16_t i = 0; i < ledCount; ++i) {
+        _strip->setPixelColor(i, colourWheel((((i % _ledsPerSegment) * 256 / ledCount) + index) & 255));
     }
     _strip->show();
 }
