@@ -13,7 +13,7 @@ public:
     patternRainbowCycle(Adafruit_NeoPixel * strip, const uint16_t ledPerSegment);
     void update(const uint16_t index);
     void start();
-    uint16_t interval();
+    uint16_t interval(const PatternSpeed s);
 };
 
 patternRainbowCycle::patternRainbowCycle(Adafruit_NeoPixel * strip) :
@@ -35,8 +35,8 @@ void patternRainbowCycle::update(const uint16_t index) {
     _strip->show();
 }
 
-uint16_t patternRainbowCycle::interval() {
-    switch(_speed) {
+uint16_t patternRainbowCycle::interval(const PatternSpeed s) {
+    switch(s) {
     case PatternSpeed::VERY_SLOW:
         return 80;
     case PatternSpeed::SLOW:

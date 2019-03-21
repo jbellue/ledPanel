@@ -12,7 +12,7 @@ public:
     patternPlainRainbow(Adafruit_NeoPixel * strip);
     void update(const uint16_t index);
     void start();
-    uint16_t interval();
+    uint16_t interval(const PatternSpeed s);
 };
 
 patternPlainRainbow::patternPlainRainbow(Adafruit_NeoPixel * strip) :
@@ -31,8 +31,8 @@ void patternPlainRainbow::update(const uint16_t index) {
 }
 
 
-uint16_t patternPlainRainbow::interval() {
-    switch(_speed) {
+uint16_t patternPlainRainbow::interval(const PatternSpeed s) {
+    switch(s) {
     case PatternSpeed::VERY_SLOW:
         return 80;
     case PatternSpeed::SLOW:

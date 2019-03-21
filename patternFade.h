@@ -12,7 +12,7 @@ public:
     patternFade(Adafruit_NeoPixel * strip);
     void update(const uint16_t index);
     void start();
-    uint16_t interval();
+    uint16_t interval(const PatternSpeed s);
 };
 
 patternFade::patternFade(Adafruit_NeoPixel * strip) :
@@ -42,8 +42,8 @@ void patternFade::update(const uint16_t index) {
     _strip->show();
 }
 
-uint16_t patternFade::interval() {
-    switch(_speed) {
+uint16_t patternFade::interval(const PatternSpeed s) {
+    switch(s) {
     case PatternSpeed::VERY_SLOW:
         return 400;
     case PatternSpeed::SLOW:

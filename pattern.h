@@ -18,7 +18,6 @@ protected:
     uint16_t _totalSteps;        // total number of steps in the pattern
     uint32_t _colour1, _colour2; // What colors are in use
     const char* _name;
-    PatternSpeed _speed;
 
 public:
     Pattern(Adafruit_NeoPixel* strip, uint16_t interval, uint16_t totalSteps, uint32_t colour1, uint32_t colour2, const char* name) :
@@ -27,14 +26,11 @@ public:
         _totalSteps(totalSteps),
         _colour1(colour1),
         _colour2(colour2),
-        _name(name),
-        _speed(PatternSpeed::MODERATE) {};
+        _name(name) {};
     virtual void update(const uint16_t index) = 0;
     virtual void start();
 
-    PatternSpeed speed() {return _speed;}
-    void speed(PatternSpeed s) {_speed = s;}
-    virtual uint16_t interval();
+    virtual uint16_t interval(PatternSpeed s);
     uint16_t totalSteps() {return _totalSteps;}
     uint32_t colour1() {return _colour1;}
     uint32_t colour2() {return _colour2;}

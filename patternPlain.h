@@ -12,7 +12,7 @@ public:
     void update(const uint16_t index);
     void start();
     void colour1(uint32_t colour);
-    uint16_t interval();
+    uint16_t interval(const PatternSpeed s);
 };
 
 patternPlain::patternPlain(Adafruit_NeoPixel * strip) :
@@ -32,7 +32,7 @@ void patternPlain::colour1(uint32_t colour) {
 }
 
 
-uint16_t patternPlain::interval() {
+uint16_t patternPlain::interval(const PatternSpeed s) {
     return UINT16_MAX;
 }
 

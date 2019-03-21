@@ -11,7 +11,7 @@ public:
     patternBlink(Adafruit_NeoPixel * strip);
     void update(const uint16_t index);
     void start();
-    uint16_t interval();
+    uint16_t interval(const PatternSpeed s);
 };
 
 patternBlink::patternBlink(Adafruit_NeoPixel * strip) :
@@ -30,8 +30,8 @@ void patternBlink::update(const uint16_t index) {
     _strip->show();
 }
 
-uint16_t patternBlink::interval() {
-    switch(_speed) {
+uint16_t patternBlink::interval(const PatternSpeed s) {
+    switch(s) {
     case PatternSpeed::VERY_SLOW:
         return 4000;
     case PatternSpeed::SLOW:
