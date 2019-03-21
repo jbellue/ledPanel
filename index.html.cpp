@@ -53,7 +53,6 @@ const changePatternEvent = e => {
     sendUpdate({pattern: e.target.value});
 }
 const updatePage = settings => {
-    console.log(settings);
     if(settings.brightness) {
         brightnessSlider.value = settings.brightness;
     }
@@ -64,8 +63,7 @@ const updatePage = settings => {
         colorPicker2.color.set(intToRgb(settings.colour2));
     }
 };
-const setPatterns = patterns => {
-    console.log(patterns);
+const setPatterns = (patterns, selectedPattern) => {
     let parent = document.getElementById("patternsGroup");
     const arraySize = patterns.length;
     for (let i = 0; i < arraySize; ++i) {
@@ -75,6 +73,9 @@ const setPatterns = patterns => {
         radioInput.id = patterns[i].replace(/\s/g,'');
         radioInput.name = "radioPattern";
         radioInput.value = i;
+        if (i == selectedPattern) {
+            radioInput.checked = true;
+        }
         radioInput.onchange = changePatternEvent;
         let radioLabel = document.createElement('label');
         radioLabel.htmlFor = patterns[i].replace(/\s/g,'');
@@ -90,9 +91,6 @@ ready(() => {
     colorPicker2 = new iro.ColorPicker('#color-picker-container2');
     brightnessSlider = document.getElementById("brightness")
     connection = new WebSocket('ws://' + location.hostname + ':81/', ['arduino']);
-    // connection.onopen = () => {
-    //     connection.send('Connect ' + new Date()); 
-    // };
     connection.onerror = error => {
         console.log('WebSocket Error ', error);
     };
@@ -100,11 +98,13 @@ ready(() => {
         console.log(e.data);
         jsonData = JSON.parse(e.data);
         if(jsonData) {
+            let selectedPattern = -1;
             if (jsonData.settings) {
                 updatePage(jsonData.settings);
+                selectedPattern = jsonData.settings.pattern;
             }
             if (jsonData.patterns) {
-                setPatterns(jsonData.patterns);
+                setPatterns(jsonData.patterns, selectedPattern);
             }
         }
     };

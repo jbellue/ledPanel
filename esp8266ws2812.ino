@@ -17,12 +17,13 @@ ESP8266WebServer server(HTTP_PORT);
 WebSocketsServer webSocket = WebSocketsServer(WEBSOCKET_PORT);
 
 void sendSettingsToClient(uint8_t num) {
-    const size_t jsonSize = JSON_ARRAY_SIZE(PatternChoice::LAST_PATTERN + 1) + JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(4);
+    const size_t jsonSize = JSON_ARRAY_SIZE(PatternChoice::LAST_PATTERN + 1) + JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(5);
     StaticJsonDocument<jsonSize> doc;
     doc["settings"]["brightness"] = strip.getBrightness();
     doc["settings"]["colour1"] = pattern.colour1();
     doc["settings"]["colour2"] = pattern.colour2();
     doc["settings"]["speed"] = pattern.speed();
+    doc["settings"]["pattern"] = pattern.pattern();
 
     JsonArray patterns = doc.createNestedArray("patterns");
     const char* patternsName[PatternChoice::LAST_PATTERN + 1];

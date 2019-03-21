@@ -32,6 +32,7 @@ public:
     void colour2(const uint32_t c) {_patterns[_pattern]->colour2(c);}
     PatternSpeed speed() {return _patterns[_pattern]->speed();}
     void speed(const uint8_t newSpeed);
+    uint8_t pattern() {return _pattern;}
 private:
     PatternChoice _pattern;
     Adafruit_NeoPixel* _strip;
