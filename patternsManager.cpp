@@ -13,9 +13,11 @@ PatternsManager::PatternsManager(Adafruit_NeoPixel* strip) :
 void PatternsManager::begin() {
     _strip->begin();
 
+    const uint8_t numberOfSegments = 4;
     _patterns[PLAIN] = new patternPlain(_strip);
     _patterns[BLINK] = new patternBlink(_strip);
     _patterns[PLAIN_RAINBOW] = new patternPlainRainbow(_strip);
+    _patterns[RAINBOW_CYCLE] = new patternRainbowCycle(_strip, numberOfSegments);
     _patterns[FADE] = new patternFade(_strip);
 }
 
