@@ -9,7 +9,8 @@ enum PatternChoice : uint8_t {
     BLINK,
     PLAIN_RAINBOW,
     RAINBOW_CYCLE,
-    LAST_PATTERN = RAINBOW_CYCLE
+    FADE,
+    LAST_PATTERN = FADE
 };
 
 class PatternsManager {
