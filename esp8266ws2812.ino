@@ -41,10 +41,15 @@ void processReceivedText(uint8_t num, uint8_t* payload) {
     StaticJsonDocument<jsonSize> doc;
     DeserializationError error = deserializeJson(doc, payload);
     if (error) {
-        // these should probably be part of the JSON response...
-        Serial.print(F("deserializeJson() failed: "));
-        Serial.println(error.c_str());
-        webSocket.sendTXT(num, "{\"status\":\"KO\"}");
+        const size_t capacity = JSON_OBJECT_SIZE(2);
+        StaticJsonDocument<capacity> errorDoc;
+        errorDoc["error"] = "deserializeJson() failed";
+        errorDoc["errorText"] = error.c_str();
+
+        const int jsonErrorStringSize = measureJson(errorDoc); 
+        char jsonErrorString[jsonErrorStringSize + 1];
+        serializeJson(errorDoc, jsonErrorString, sizeof(jsonErrorString));
+        webSocket.sendTXT(num, jsonErrorString);
     }
     else {
         const uint8_t brightness = doc["brightness"];
