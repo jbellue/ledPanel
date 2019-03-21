@@ -17,7 +17,8 @@ ESP8266WebServer server(HTTP_PORT);
 WebSocketsServer webSocket = WebSocketsServer(WEBSOCKET_PORT);
 
 void sendSettingsToClient(uint8_t num) {
-    StaticJsonDocument<JSON_ARRAY_SIZE(PatternChoice::LAST_PATTERN + 1) + JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(4)> doc;
+    const size_t jsonSize = JSON_ARRAY_SIZE(PatternChoice::LAST_PATTERN + 1) + JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(4);
+    StaticJsonDocument<jsonSize> doc;
     doc["settings"]["brightness"] = strip.getBrightness();
     doc["settings"]["colour1"] = pattern.colour1();
     doc["settings"]["colour2"] = pattern.colour2();
@@ -36,7 +37,7 @@ void sendSettingsToClient(uint8_t num) {
 
 void processReceivedText(uint8_t num, uint8_t* payload) {
     const size_t jsonSize = JSON_OBJECT_SIZE(3) + 30;
-    DynamicJsonDocument doc(jsonSize);
+    StaticJsonDocument<jsonSize> doc;
     DeserializationError error = deserializeJson(doc, payload);
     if (error) {
         // these should probably be part of the JSON response...
