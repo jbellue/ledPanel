@@ -24,7 +24,6 @@ void patternFade::start() {
 }
 
 void patternFade::update(const uint16_t index) {
-    Serial.println(index);
     if (index == 0) {
         _goingToColour1 = !_goingToColour1;
     }
