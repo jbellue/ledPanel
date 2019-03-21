@@ -19,6 +19,8 @@ void PatternsManager::begin() {
     _patterns[PLAIN_RAINBOW] = new patternPlainRainbow(_strip);
     _patterns[RAINBOW_CYCLE] = new patternRainbowCycle(_strip, numberOfSegments);
     _patterns[FADE] = new patternFade(_strip);
+
+    _patterns[_pattern]->start();
 }
 
 void PatternsManager::update() {
