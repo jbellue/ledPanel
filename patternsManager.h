@@ -30,7 +30,7 @@ public:
     void colour1(const uint32_t c) {_patterns[_pattern]->colour1(c);}
     uint32_t colour2() {return _patterns[_pattern]->colour2();}
     void colour2(const uint32_t c) {_patterns[_pattern]->colour2(c);}
-    PatternSpeed speed() {return _patterns[_pattern]->speed();}
+    uint8_t speed() {return _patterns[_pattern]->speed();}
     void speed(const uint8_t newSpeed);
     uint8_t pattern() {return _pattern;}
 private:
