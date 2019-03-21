@@ -34,7 +34,7 @@ void sendSettingsToClient(uint8_t num) {
     webSocket.sendTXT(num, jsonString);
 }
 
-void processReveivedText(uint8_t num, uint8_t* payload) {
+void processReceivedText(uint8_t num, uint8_t* payload) {
     const size_t jsonSize = JSON_OBJECT_SIZE(3) + 30;
     DynamicJsonDocument doc(jsonSize);
     DeserializationError error = deserializeJson(doc, payload);
@@ -81,7 +81,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         sendSettingsToClient(num);
         break;
     case WStype_TEXT:
-        processReveivedText(num, payload);
+        processReceivedText(num, payload);
         break;
     case WStype_BIN:
         Serial.printf("[%u] get binary length: %u\r\n", num, length);
