@@ -30,8 +30,9 @@ void sendSettingsToClient(uint8_t num) {
     for(uint8_t i = 0; i <= PatternChoice::LAST_PATTERN; ++i) {
         patterns.add(patternsName[i]);
     }
-    String jsonString;
-    serializeJson(doc, jsonString);
+    const int jsonStringSize = measureJson(doc); 
+    char jsonString[jsonStringSize + 1];
+    serializeJson(doc, jsonString, sizeof(jsonString));
     webSocket.sendTXT(num, jsonString);
 }
 
