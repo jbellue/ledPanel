@@ -6,34 +6,35 @@
 class patternPlain : public Pattern
 {
 private:
-    /* data */
+    uint32_t _oldColour1;
 public:
     patternPlain(Adafruit_NeoPixel * strip);
-    void update(const uint16_t index);
-    void start();
-    void colour1(uint32_t colour);
+    void update(const uint16_t index, const uint32_t colour1, const uint32_t colour2);
+    void start(const uint32_t colour1, const uint32_t colour2);
     uint16_t interval(const PatternSpeed s);
 };
 
 patternPlain::patternPlain(Adafruit_NeoPixel * strip) :
-    Pattern(strip, 0, 1, 0xFF0000, 0x00FF00, "Plain") {}
+    Pattern(strip, 1, "Plain"),
+    _oldColour1(0) {}
 
-void patternPlain::start() {
-    colour1(0xFF0000);
+void patternPlain::start(const uint32_t colour1, const uint32_t colour2) {
+    update(0, colour1, colour2);
 }
-void patternPlain::update(const uint16_t index) { }
 
-void patternPlain::colour1(uint32_t colour) {
-    const uint16_t pixelCount = _strip->numPixels();
-    for(uint16_t i = 0; i < pixelCount; ++i) {
-        _strip->setPixelColor(i, colour);
+void patternPlain::update(const uint16_t index, const uint32_t colour1, const uint32_t colour2) {
+    if (colour1 != _oldColour1) {
+        const uint16_t pixelCount = _strip->numPixels();
+        for(uint16_t i = 0; i < pixelCount; ++i) {
+            _strip->setPixelColor(i, colour1);
+        }
+        _oldColour1 = colour1;
+        _strip->show();
     }
-    _strip->show();
 }
-
 
 uint16_t patternPlain::interval(const PatternSpeed s) {
-    return UINT16_MAX;
+    return 50;
 }
 
 #endif

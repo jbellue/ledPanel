@@ -9,20 +9,20 @@ private:
     /* data */
 public:
     patternBlink(Adafruit_NeoPixel * strip);
-    void update(const uint16_t index);
-    void start();
+    void update(const uint16_t index, const uint32_t colour1, const uint32_t colour2);
+    void start(const uint32_t colour1, const uint32_t colour2);
     uint16_t interval(const PatternSpeed s);
 };
 
 patternBlink::patternBlink(Adafruit_NeoPixel * strip) :
-    Pattern(strip, 1000, 2, 0xFF0000, 0x00FF00, "Blink") {}
+    Pattern(strip, 2, "Blink") {}
 
-void patternBlink::start() {
-    update(0);
+void patternBlink::start(const uint32_t colour1, const uint32_t colour2) {
+    update(1, colour1, colour2);
 }
 
-void patternBlink::update(const uint16_t index) {
-    const uint32_t c = (index ? _colour1 : _colour2);
+void patternBlink::update(const uint16_t index, const uint32_t colour1, const uint32_t colour2) {
+    const uint32_t c = (index ? colour1 : colour2);
     const uint16_t pixelCount = _strip->numPixels();
     for(uint16_t i = 0; i < pixelCount; ++i) {
         _strip->setPixelColor(i, c);

@@ -7,7 +7,9 @@
 
 PatternsManager::PatternsManager(Adafruit_NeoPixel* strip) :
     _strip(strip),
-    _pattern(PLAIN) {
+    _pattern(PLAIN),
+    _colour1(0xFF0000),
+    _colour2(0x00FF00) {
 }
 
 void PatternsManager::begin() {
@@ -20,14 +22,13 @@ void PatternsManager::begin() {
     _patterns[RAINBOW_CYCLE] = new patternRainbowCycle(_strip, numberOfSegments);
     _patterns[FADE] = new patternFade(_strip);
 
-    _patterns[_pattern]->start();
+    _patterns[_pattern]->start(_colour1, _colour2);
 }
 
 void PatternsManager::update() {
-    if((millis() - _lastUpdate) > _patterns[_pattern]->interval(_speed)) // time to update
-    {
+    if((millis() - _lastUpdate) > _patterns[_pattern]->interval(_speed)) {
         _lastUpdate = millis();
-        _patterns[_pattern]->update(_index);
+        _patterns[_pattern]->update(_index, _colour1, _colour2);
         increment();
     }
 }
@@ -50,7 +51,7 @@ bool PatternsManager::changePattern(const uint8_t newPattern) {
     }
     _pattern = (PatternChoice)newPattern;
     _index = 0;
-    _patterns[_pattern]->start();
+    _patterns[_pattern]->start(_colour1, _colour2);
 }
 
 void PatternsManager::speed(const uint8_t s) {

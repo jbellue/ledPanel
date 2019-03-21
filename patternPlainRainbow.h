@@ -10,19 +10,19 @@ private:
     /* data */
 public:
     patternPlainRainbow(Adafruit_NeoPixel * strip);
-    void update(const uint16_t index);
-    void start();
+    void update(const uint16_t index, const uint32_t colour1, const uint32_t colour2);
+    void start(const uint32_t colour1, const uint32_t colour2);
     uint16_t interval(const PatternSpeed s);
 };
 
 patternPlainRainbow::patternPlainRainbow(Adafruit_NeoPixel * strip) :
-    Pattern(strip, 20, 255, 0x000000, 0x000000, "Plain Rainbow") {}
+    Pattern(strip, 255, "Plain Rainbow") {}
 
-void patternPlainRainbow::start() {
-    update(0);
+void patternPlainRainbow::start(const uint32_t colour1, const uint32_t colour2) {
+    update(0, colour1, colour2);
 }
 
-void patternPlainRainbow::update(const uint16_t index) {
+void patternPlainRainbow::update(const uint16_t index, const uint32_t colour1, const uint32_t colour2) {
     const uint16_t pixelCount = _strip->numPixels();
     for(uint16_t i = 0; i < pixelCount; ++i) {
         _strip->setPixelColor(i, colourWheel(index));
