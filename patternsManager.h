@@ -32,11 +32,6 @@ public:
     void colour2(const uint32_t c) {_patterns[_pattern]->colour2(c);}
     PatternSpeed speed() {return _patterns[_pattern]->speed();}
     void speed(const uint8_t newSpeed);
-
-    // void theaterChase(const uint32_t colour1, const uint32_t colour2, const uint8_t interval);
-    // void colorWipe(const uint32_t color, const uint8_t interval);
-    // void scanner(const uint32_t colour1, const uint8_t interval);
-    // void fade(const uint32_t colour1, const uint32_t colour2, const uint16_t steps, const uint8_t interval);
 private:
     PatternChoice _pattern;
     Adafruit_NeoPixel* _strip;
@@ -51,14 +46,6 @@ private:
 
     // Increment the index and reset at the end
     void increment();
-
-    // void theaterChaseUpdate();
-    // void scannerUpdate();
-    // void fadeUpdate();
-
-    // // Set all pixels to a color (synchronously)
-    // void colorSet(const uint32_t color);
-
 };
 
 #endif
