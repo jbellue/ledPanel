@@ -10,10 +10,18 @@ char index_html[] PROGMEM = R"=====(
     </head>
     <body>
         <div>
-            <input type="range" id="brightness" name="brightness" min="0" max="255" oninput="sendUpdate({brightness: this.value})">
-            <label for="brightness">Brightness</label>
-            <input type="range" id="speed" name="speed" min="0" max="4" oninput="sendUpdate({speed: this.value})">
-            <label for="speed">Speed</label>
+            <div>
+                <label for="brightness">Brightness</label>
+                <div>
+                    <input type="range" id="brightness" name="brightness" min="0" max="255" oninput="sendUpdate({brightness: this.value})">
+                </div>
+            </div>
+            <div>
+                <label for="speed">Speed</label>
+                <div>
+                    <input type="range" id="speed" name="speed" min="0" max="4" oninput="sendUpdate({speed: this.value})">
+                </div>
+            </div>
         </div>
         <div id="patternsGroup"></div>
         <div id="color-picker-container1"></div>
