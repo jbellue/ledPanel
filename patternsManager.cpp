@@ -66,3 +66,8 @@ void PatternsManager::speed(const uint8_t s) {
     }
 }
 
+void PatternsManager::brightness(const uint8_t brightness) {
+    _strip->setBrightness(brightness);
+    _strip->show();
+}
+

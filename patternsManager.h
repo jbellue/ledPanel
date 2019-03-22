@@ -33,6 +33,8 @@ public:
     uint8_t speed() {return _speed;}
     void speed(const uint8_t newSpeed);
     uint8_t pattern() {return _pattern;}
+    uint8_t brightness() {return _strip->getBrightness();}
+    void brightness(const uint8_t brightness);
 private:
     PatternChoice _pattern;
     Adafruit_NeoPixel* _strip;

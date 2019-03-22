@@ -19,7 +19,7 @@ WebSocketsServer webSocket = WebSocketsServer(WEBSOCKET_PORT);
 void sendSettingsToClient(uint8_t num) {
     const size_t jsonSize = JSON_ARRAY_SIZE(PatternChoice::LAST_PATTERN + 1) + JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(5);
     StaticJsonDocument<jsonSize> doc;
-    doc["settings"]["brightness"] = strip.getBrightness();
+    doc["settings"]["brightness"] = pattern.brightness();
     doc["settings"]["colour1"] = pattern.colour1();
     doc["settings"]["colour2"] = pattern.colour2();
     doc["settings"]["speed"] = pattern.speed();
@@ -55,7 +55,7 @@ void processReceivedText(uint8_t num, uint8_t* payload) {
     else {
         const uint8_t brightness = doc["brightness"];
         if (brightness != 0) {
-            strip.setBrightness(brightness);
+            pattern.brightness(brightness);
         }
 
         const JsonVariant jsonPattern = doc["pattern"];
