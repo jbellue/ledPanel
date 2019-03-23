@@ -22,7 +22,7 @@ public:
 };
 
 patternFade::patternFade(Adafruit_NeoPixel * strip) :
-    Pattern(strip, 32, "Fade"),
+    Pattern(strip, 32, "Fade", 2),
     _goingToColour1(false) {}
 
 void patternFade::start(const uint32_t colour1, const uint32_t colour2) {

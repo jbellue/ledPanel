@@ -17,7 +17,7 @@ class PatternsManager {
 public:
     PatternsManager(Adafruit_NeoPixel* strip);
 
-    void getPatternsName(const char** dest);
+    void getPatternsInfo(const char** dest, uint8_t numColour[]);
     
     void begin();
 

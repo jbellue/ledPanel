@@ -33,9 +33,10 @@ void PatternsManager::update() {
     }
 }
 
-void PatternsManager::getPatternsName(const char** dest) {
+void PatternsManager::getPatternsInfo(const char** dest, uint8_t numColour[]) {
     for(uint8_t i = 0; i <= LAST_PATTERN; ++i) {
         dest[i] = _patterns[i]->name();
+        numColour[i] = _patterns[i]->numColour();
     }
 }
 

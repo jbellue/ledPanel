@@ -16,7 +16,7 @@ public:
 };
 
 patternPlainRainbow::patternPlainRainbow(Adafruit_NeoPixel * strip) :
-    Pattern(strip, 255, "Plain Rainbow") {}
+    Pattern(strip, 255, "Plain Rainbow", 0) {}
 
 void patternPlainRainbow::start(const uint32_t colour1, const uint32_t colour2) {
     update(0, colour1, colour2);

@@ -20,7 +20,7 @@ patternRainbowCycle::patternRainbowCycle(Adafruit_NeoPixel * strip) :
     patternRainbowCycle(strip, strip->numPixels()) {}
 
 patternRainbowCycle::patternRainbowCycle(Adafruit_NeoPixel * strip, const uint16_t ledPerSegment) :
-    Pattern(strip, 255, "Rainbow Cycle"),
+    Pattern(strip, 255, "Rainbow Cycle", 0),
     _ledsPerSegment(ledPerSegment) {
 }
 

@@ -15,7 +15,7 @@ public:
 };
 
 patternPlain::patternPlain(Adafruit_NeoPixel * strip) :
-    Pattern(strip, 1, "Plain"),
+    Pattern(strip, 1, "Plain", 1),
     _oldColour1(0) {}
 
 void patternPlain::start(const uint32_t colour1, const uint32_t colour2) {

@@ -15,7 +15,7 @@ public:
 };
 
 patternBlink::patternBlink(Adafruit_NeoPixel * strip) :
-    Pattern(strip, 2, "Blink") {}
+    Pattern(strip, 2, "Blink", 2) {}
 
 void patternBlink::start(const uint32_t colour1, const uint32_t colour2) {
     update(1, colour1, colour2);
