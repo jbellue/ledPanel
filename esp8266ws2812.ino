@@ -17,7 +17,7 @@ ESP8266WebServer server(HTTP_PORT);
 WebSocketsServer webSocket = WebSocketsServer(WEBSOCKET_PORT);
 
 void sendSettingsToClient(uint8_t num) {
-    const size_t jsonSize = JSON_ARRAY_SIZE(6) + (PatternChoice::LAST_PATTERN + 1)*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(5);
+    const size_t jsonSize = JSON_ARRAY_SIZE(PatternChoice::LAST_PATTERN + 1) + (PatternChoice::LAST_PATTERN + 2)*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(5);
     StaticJsonDocument<jsonSize> doc;
 
     JsonObject settings = doc.createNestedObject("settings");
