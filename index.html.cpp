@@ -5,27 +5,61 @@ char index_html[] PROGMEM = R"=====(
         <meta charset="utf-8">
         <title></title>
         <meta name="description" content="">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+        <style>
+body {
+    background: #0e0e0e;
+    color: #a2faa3;
+    font-family: 'Ubuntu', sans-serif;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 0.7fr 1.3fr 1fr;
+}
+.range { grid-area: 1 / 2 / 2 / 3; }
+.iro1 { grid-area: 2 / 2 / 3 / 3; }
+.iro2 { grid-area: 3 / 2 / 4 / 3; }
+.menu { grid-area: 1 / 1 / 4 / 2; }
+.stv-radio-buttons-wrapper { display: inline-block; }
+.stv-radio-button { display: none; }
+.stv-radio-button + label {
+    font-weight: bold;
+    float: left;
+    padding: 1em 1em;
+    cursor: pointer;
+    background: #1c1c1c;
+    border: 2px solid #534b52;
+    width: 9em;
+    text-align: center;
+}
+.stv-radio-buttons-wrapper div:not(:last-child) label { border-bottom-style: none; }
+
+.stv-radio-button:checked + label {
+    color: #004966;
+    background: #92c9b1;
+}
+
+        </style>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://cdn.jsdelivr.net/npm/@jaames/iro/dist/iro.min.js"></script>
     </head>
     <body>
-        <div class="ui center aligned container">
-            <div class="ui form">
-                <div class="field">
+        <div class="grid-container">
+            <div class="range">
+                <div class="">
                     <label for="brightness">Brightness</label>
-                    <input class="ui input" type="range" id="brightness" name="brightness" min="0" max="255" oninput="sendUpdate({brightness: this.value})">
+                    <input class="" type="range" id="brightness" name="brightness" min="0" max="255" oninput="sendUpdate({brightness: this.value})">
                 </div>
-                <div class="field">
+                <div class="">
                     <label for="speed">Speed</label>
-                    <input class="ui input" type="range" id="speed" name="speed" min="0" max="4" oninput="sendUpdate({speed: this.value})">
+                    <input class="" type="range" id="speed" name="speed" min="0" max="4" oninput="sendUpdate({speed: this.value})">
                 </div>
             </div>
-            <div class="ui vertical buttons" id="patternsGroup">
-            </div>
-            <div id="colorPickers" class="ui grid ceter aligned">
-                <div class="eight wide column" id="color-picker-container1"></div>
-                <div class="eight wide column" id="color-picker-container2"></div>
+            <div class="iro1" id="color-picker-container1"></div>
+            <div class="iro2" id="color-picker-container2"></div>
+            <div class="menu">
+                <div id="patternsGroup" class="stv-radio-buttons-wrapper">
+                </div>
             </div>
         </div>
 <script>
@@ -61,10 +95,6 @@ const intToRgb = data => {
     return {r: (data & 0xff0000) >> 16, g: (data & 0x00ff00) >> 8, b: (data & 0x0000ff)};
 }
 const changePatternEvent = e => {
-    document.querySelectorAll("#patternsGroup .active").forEach(btn => {
-        btn.classList.remove("active");
-    });
-    e.target.classList.add("active");
     showOrHideColourPickers(patternsObject[e.target.value].numColour);
     sendUpdate({pattern: e.target.value});
 }
@@ -79,6 +109,7 @@ const updatePage = settings => {
         colorPicker2.color.set(intToRgb(settings.colour2));
     }
 };
+
 const showOrHideColourPickers = num => {
     if (num == 0) {
         document.getElementById('color-picker-container1').style.display = "none";
@@ -99,16 +130,25 @@ const setPatterns = (patterns, selectedPattern) => {
     let parent = document.getElementById("patternsGroup");
     const arraySize = patterns.length;
     for (let i = 0; i < arraySize; ++i) {
-        let button = document.createElement('button');
-        button.onclick = changePatternEvent;
-        button.value = i;
-        button.innerHTML = patterns[i].name;
+        let radioDiv = document.createElement('div');
+        let radioInput = document.createElement('input');
+        radioInput.classList.add("stv-radio-button");
+        radioInput.type = "radio";
+        const radioId = patterns[i].name.replace(/\s/g,'');
+        radioInput.id = patterns[i].name.replace(/\s/g,'');
+        radioInput.name = "radioPattern";
+        radioInput.value = i;
         if (i == selectedPattern) {
-            button.classList.add("active");
-            showOrHideColourPickers(patterns[i].numColour)
+            radioInput.checked = true;
+            showOrHideColourPickers(patterns[i].numColour);
         }
-        button.classList.add("ui", "button");
-        parent.appendChild(button);
+        radioInput.onchange = changePatternEvent;
+        let radioLabel = document.createElement('label');
+        radioLabel.htmlFor = radioId;
+        radioLabel.innerText = patterns[i].name;
+        radioDiv.appendChild(radioInput);
+        radioDiv.appendChild(radioLabel);
+        parent.appendChild(radioDiv);
     }
 };
 
