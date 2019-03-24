@@ -4,16 +4,15 @@
 #include "pattern.h"
 #include "utils.h"
 
-/* This pattern has 32 steps so we can do a fast divide in its update, by byteshifting to the right. */
 class patternFade : public Pattern
 {
 private:
     bool _goingToColour1;
 
     // this holds the number of bytes we need to shift
-    // essentially will divide by 32, but more efficiently (until compilers get smart enough?)
+    // essentially will divide by 128, but more efficiently (until compilers get smart enough?)
     // if the number of steps changes, change that!
-    static const uint8_t _log2steps = 5;
+    static const uint8_t _log2steps = 7;
 public:
     patternFade(Adafruit_NeoPixel * strip);
     void update(const uint16_t index, const uint32_t colour1, const uint32_t colour2);
@@ -22,7 +21,7 @@ public:
 };
 
 patternFade::patternFade(Adafruit_NeoPixel * strip) :
-    Pattern(strip, 32, "Fade", 2),
+    Pattern(strip, 128, "Fade", 2),
     _goingToColour1(false) {}
 
 void patternFade::start(const uint32_t colour1, const uint32_t colour2) {
@@ -52,16 +51,16 @@ void patternFade::update(const uint16_t index, const uint32_t colour1, const uin
 uint16_t patternFade::interval(const PatternSpeed s) {
     switch(s) {
     case PatternSpeed::VERY_SLOW:
-        return 400;
+        return 100;
     case PatternSpeed::SLOW:
-        return 200;
-    case PatternSpeed::FAST:
         return 50;
+    case PatternSpeed::FAST:
+        return 12;
     case PatternSpeed::LUDICROUS:
-        return 25;
+        return 6;
     case PatternSpeed::MODERATE:
     default:
-        return 100;
+        return 25;
     }
 }
 
