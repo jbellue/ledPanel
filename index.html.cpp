@@ -3,63 +3,69 @@ char index_html[] PROGMEM = R"=====(
 <!DOCTYPE html>
     <head>
         <meta charset="utf-8">
-        <title></title>
+        <title>LED Panel</title>
         <meta name="description" content="">
         <style>
 body {
-    background: #0e0e0e;
-    color: #a2faa3;
+    color: #fff;
+    background: #171F30;
     font-family: 'Ubuntu', sans-serif;
-}
-.grid-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 0.7fr 1.3fr 1fr;
-}
-.range { grid-area: 1 / 2 / 2 / 3; }
-.iro1 { grid-area: 2 / 2 / 3 / 3; }
-.iro2 { grid-area: 3 / 2 / 4 / 3; }
-.menu { grid-area: 1 / 1 / 4 / 2; }
-.stv-radio-buttons-wrapper { display: inline-block; }
-.stv-radio-button { display: none; }
-.stv-radio-button + label {
-    font-weight: bold;
-    float: left;
-    padding: 1em 1em;
-    cursor: pointer;
-    background: #1c1c1c;
-    border: 2px solid #534b52;
-    width: 9em;
     text-align: center;
 }
-.stv-radio-buttons-wrapper div:not(:last-child) label { border-bottom-style: none; }
-
-.stv-radio-button:checked + label {
-    color: #004966;
-    background: #92c9b1;
+.wrap { 
+    min-height: 75vh;
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
 }
-
+.wrap .half {
+    width: 50%;
+    padding: 32px 0;
+}
+.range label {display: block;}
+.range input {width: 100%;}
+.radioButton { display: none; }
+.radioButton + label {
+    float: left;
+    padding: 1em;
+    cursor: pointer;
+    background: #444857;
+    margin-bottom: 7px;
+    border-radius: 4px;
+    min-width: 150px;
+}
+.radioButton:hover + label {
+    background: #5a5f73;
+}
+.radioButton:checked + label {
+    color: #000;
+    background: #47cf73;
+}
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://cdn.jsdelivr.net/npm/@jaames/iro/dist/iro.min.js"></script>
     </head>
     <body>
-        <div class="grid-container">
-            <div class="range">
-                <div class="">
-                    <label for="brightness">Brightness</label>
-                    <input class="" type="range" id="brightness" name="brightness" min="0" max="255" oninput="sendUpdate({brightness: this.value})">
-                </div>
-                <div class="">
-                    <label for="speed">Speed</label>
-                    <input class="" type="range" id="speed" name="speed" min="0" max="4" oninput="sendUpdate({speed: this.value})">
+        <h1>LED Panel</h1>
+        <div class="wrap">
+            <div class="menu half">
+                <div id="patternsGroup">
                 </div>
             </div>
-            <div class="iro1" id="color-picker-container1"></div>
-            <div class="iro2" id="color-picker-container2"></div>
-            <div class="menu">
-                <div id="patternsGroup" class="stv-radio-buttons-wrapper">
+            <div class="half">
+                <div class="range">
+                    <div>
+                        <label for="brightness">Brightness</label>
+                        <input class="" type="range" id="brightness" name="brightness" min="0" max="255" oninput="sendUpdate({brightness: this.value})">
+                    </div>
+                    <div>
+                        <label for="speed">Speed</label>
+                        <input class="" type="range" id="speed" name="speed" min="0" max="4" oninput="sendUpdate({speed: this.value})">
+                    </div>
                 </div>
+                <div class="iro1" id="color-picker-container1"></div>
+                <div class="iro2" id="color-picker-container2"></div>
             </div>
         </div>
 <script>
@@ -132,7 +138,7 @@ const setPatterns = (patterns, selectedPattern) => {
     for (let i = 0; i < arraySize; ++i) {
         let radioDiv = document.createElement('div');
         let radioInput = document.createElement('input');
-        radioInput.classList.add("stv-radio-button");
+        radioInput.classList.add("radioButton");
         radioInput.type = "radio";
         const radioId = patterns[i].name.replace(/\s/g,'');
         radioInput.id = patterns[i].name.replace(/\s/g,'');
@@ -153,8 +159,8 @@ const setPatterns = (patterns, selectedPattern) => {
 };
 
 ready(() => {
-    colorPicker1 = new iro.ColorPicker('#color-picker-container1', {width:150, display: "inline-block"});
-    colorPicker2 = new iro.ColorPicker('#color-picker-container2', {width:150, display: "inline-block"});
+    colorPicker1 = new iro.ColorPicker('#color-picker-container1', {width:200, display: "inline-block", borderWidth: 1, borderColor: "#fff"});
+    colorPicker2 = new iro.ColorPicker('#color-picker-container2', {width:200, display: "inline-block", borderWidth: 1, borderColor: "#fff"});
     brightnessSlider = document.getElementById("brightness")
     connection = new WebSocket('ws://' + location.hostname + ':81/', ['arduino']);
     connection.onerror = error => {
