@@ -21,7 +21,6 @@ body {
 }
 .wrap .half {
     width: 50%;
-    padding: 32px 0;
 }
 .range label {display: block;}
 .range input {width: 100%;}
