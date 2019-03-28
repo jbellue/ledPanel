@@ -3,6 +3,7 @@
 #include "patternPlain.h"
 #include "patternPlainRainbow.h"
 #include "patternRainbowCycle.h"
+#include "patternTinwkle.h"
 #include "patternFade.h"
 
 PatternsManager::PatternsManager(Adafruit_NeoPixel* strip) :
@@ -20,6 +21,7 @@ void PatternsManager::begin() {
     _patterns[BLINK] = new patternBlink(_strip);
     _patterns[PLAIN_RAINBOW] = new patternPlainRainbow(_strip);
     _patterns[RAINBOW_CYCLE] = new patternRainbowCycle(_strip, numberOfSegments);
+    _patterns[TWINKLE] = new patternTwinkle(_strip);
     _patterns[FADE] = new patternFade(_strip);
 
     _patterns[_pattern]->start(_colour1, _colour2);

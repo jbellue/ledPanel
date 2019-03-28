@@ -9,6 +9,7 @@ enum PatternChoice : uint8_t {
     BLINK,
     PLAIN_RAINBOW,
     RAINBOW_CYCLE,
+    TWINKLE,
     FADE,
     LAST_PATTERN = FADE
 };
