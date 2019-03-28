@@ -16,9 +16,11 @@ public:
 
 patternPlain::patternPlain(Adafruit_NeoPixel * strip) :
     Pattern(strip, 1, "Plain", 1),
-    _oldColour1(0) {}
+    _oldColour1(0xFFFFFFFF) {}
 
 void patternPlain::start(const uint32_t colour1, const uint32_t colour2) {
+    // set the old colour1 to an unattainable value to force the redraw
+    _oldColour1 = 0xFFFFFFFF;
     update(0, colour1, colour2);
 }
 
