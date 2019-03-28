@@ -25,8 +25,12 @@ td .LED {
   background: black;
 }
     </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css" integrity="sha384-QokYePQSOwpBDuhlHOsX0ymF6R/vLk/UQVz3WHa6wygxI5oGTmDTv8wahFOSspdm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/fontawesome.css" integrity="sha384-vd1e11sR28tEK9YANUtpIOdjGW14pS87bUBuOIoBILVWLFnS+MCX9T6MMf0VdPGq" crossorigin="anonymous">
 </head>
 <body>
+    <button id="playPauseBtn" onclick="togglePlayPause()"><i class="fas fa-pause"></i></button>
+    <button onclick="triggerNextStep()"><i class="fas fa-step-forward"></i></button>
     <label for="speed">Speed</label>
     <input class="" type="range" id="speed" name="speed" min="0" max="4" oninput="changeSpeed(parseInt(this.value))">
     <div id="LEDsContainer">
@@ -53,6 +57,7 @@ td .LED {
     </div>
 </body>
 <script>
+
 const random = (max) => Math.floor(Math.random() * Math.floor(max));
 let LEDs = document.querySelectorAll('td .LED');
 let _strip = {
@@ -117,21 +122,43 @@ var patternManager = {
             this._index = 0;
         }
     },
-    update: function() {
+    poll: function() {
         let timeNow = this.millis();
         if((timeNow - this._lastUpdate) > pattern.interval(this._speed)) {
             this._lastUpdate = timeNow;
+            this.update();
+        }
+    },
+    update: function() {
             pattern.update(this._index, this._colour1, this._colour2);
             this.increment();
         }
-    }
+
 };
 const changeSpeed = (newValue) => {
     patternManager._speed = newValue;
 }
-var intervalID = window.setInterval(function() {
-    patternManager.update();
-}, 5);
+const pollTime = 5; // in ms
+let loopTimer = window.setInterval(function() {
+    patternManager.poll();
+}, pollTime);
 
+const togglePlayPause = () => {
+    let icon = document.querySelector("#playPauseBtn i");
+    if (!loopTimer) {
+        loopTimer = window.setInterval(function() {patternManager.poll();}, pollTime);
+        icon.classList.add('fa-pause');
+        icon.classList.remove('fa-play');
+    }
+    else {
+        window.clearTimeout(loopTimer); 
+        loopTimer = null;
+        icon.classList.add('fa-play');   
+        icon.classList.remove('fa-pause');
+    }
+}
+const triggerNextStep = () => {
+    patternManager.update();
+}
 </script>
 </html>
