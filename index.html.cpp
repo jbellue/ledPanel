@@ -53,7 +53,7 @@ body {
                 </div>
             </div>
             <div class="half">
-                <div class="range">
+                <form class="range" autocomplete="off">
                     <div>
                         <label for="brightness">Brightness</label>
                         <input class="" type="range" id="brightness" name="brightness" min="0" max="255" oninput="sendUpdate({brightness: this.value})">
@@ -62,7 +62,7 @@ body {
                         <label for="speed">Speed</label>
                         <input class="" type="range" id="speed" name="speed" min="0" max="4" oninput="sendUpdate({speed: this.value})">
                     </div>
-                </div>
+                </form>
                 <div class="iro1" id="color-picker-container1"></div>
                 <div class="iro2" id="color-picker-container2"></div>
             </div>
