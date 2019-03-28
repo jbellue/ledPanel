@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <style>
+table {
+  width: 90%;
+}
+td {
+  position: relative;
+}
+td:after {
+  content: '';
+  display: block;
+  margin-top: 100%;
+}
+td .LED {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: black;
+}
+    </style>
+</head>
+<body>
+    <label for="speed">Speed</label>
+    <input class="" type="range" id="speed" name="speed" min="0" max="4" oninput="changeSpeed(parseInt(this.value))">
+    <div id="LEDsContainer">
+        <table>
+            <tr>
+                <td><div data-colour="#000" class="LED"></div></td>
+                <td><div data-colour="#000" class="LED"></div></td>
+                <td><div data-colour="#000" class="LED"></div></td>
+                <td><div data-colour="#000" class="LED"></div></td>
+            </tr>
+            <tr>
+                <td><div data-colour="#000" class="LED"></div></td>
+                <td><div data-colour="#000" class="LED"></div></td>
+                <td><div data-colour="#000" class="LED"></div></td>
+                <td><div data-colour="#000" class="LED"></div></td>
+            </tr>
+            <tr>
+                <td><div data-colour="#000" class="LED"></div></td>
+                <td><div data-colour="#000" class="LED"></div></td>
+                <td><div data-colour="#000" class="LED"></div></td>
+                <td><div data-colour="#000" class="LED"></div></td>
+            </tr>
+        </table>
+    </div>
+</body>
+<script>
+const random = (max) => Math.floor(Math.random() * Math.floor(max));
+let LEDs = document.querySelectorAll('td .LED');
+let _strip = {
+    setPixelColor: function(index, colour) {
+        LEDs[index].dataset.colour = `#${colour.toString(16).padStart(6, '0')}`;
+    },
+    show: function() {
+        for (let i = 0; i < LEDs.length; ++i) {
+            LEDs[i].style.background = LEDs[i].dataset.colour;
+        }
+    },
+    numPixels: function() {
+        return LEDs.length;
+    }
+}
+
+let patternBlink = {
+    _totalSteps: 2,
+    totalSteps: function() {
+        return this._totalSteps;
+    },
+    start: function(colour1, colour2) {
+        update(1, colour1, colour2);
+    },
+    update: function(index, colour1, colour2) {
+        let c = (index ? colour1 : colour2);
+        let pixelCount = _strip.numPixels();
+        for(let i = 0; i < pixelCount; ++i) {
+            _strip.setPixelColor(i, c);
+        }
+        _strip.show();
+    },
+    interval: function(s) {
+        switch(s) {
+        case 0:
+            return 3200;
+        case 1:
+            return 1600;
+        case 3:
+            return 400;
+        case 4:
+            return 200;
+        case 2:
+        default:
+            return 800;
+        }
+    }
+}
+
+const pattern = patternBlink;
+var patternManager = {
+    _index: 0,
+    _speed: 2,
+    _lastUpdate: 0,
+    _colour1: 0xFF0000,
+    _colour2: 0x0000FF,
+    millis: function() {
+        return Date.now();
+    },
+    increment: function() {
+        if (++(this._index) >= pattern.totalSteps()) {
+            this._index = 0;
+        }
+    },
+    update: function() {
+        let timeNow = this.millis();
+        if((timeNow - this._lastUpdate) > pattern.interval(this._speed)) {
+            this._lastUpdate = timeNow;
+            pattern.update(this._index, this._colour1, this._colour2);
+            this.increment();
+        }
+    }
+};
+const changeSpeed = (newValue) => {
+    patternManager._speed = newValue;
+}
+var intervalID = window.setInterval(function() {
+    patternManager.update();
+}, 5);
+
+</script>
+</html>
