@@ -58,27 +58,27 @@ void processReceivedText(uint8_t num, uint8_t* payload) {
         webSocket.sendTXT(num, jsonErrorString);
     }
     else {
-        const uint8_t brightness = doc["brightness"];
-        if (brightness != 0) {
-            pattern.brightness(brightness);
+        const JsonVariantConst jsonBrightness = doc["brightness"];
+        if (!jsonBrightness.isNull()) {
+            pattern.brightness(jsonBrightness.as<uint8_t>());
         }
 
-        const JsonVariant jsonPattern = doc["pattern"];
+        const JsonVariantConst jsonPattern = doc["pattern"];
         if (!jsonPattern.isNull()) {
             pattern.changePattern(jsonPattern.as<uint8_t>());
         }
-        const JsonVariant jsonSpeed = doc["speed"];
+        const JsonVariantConst jsonSpeed = doc["speed"];
         if (!jsonSpeed.isNull()) {
             pattern.speed(jsonSpeed.as<uint8_t>());
         }
 
-        const uint32_t colour1 = doc["colour1"];
-        if (colour1) {
-            pattern.colour1(colour1);
+        const JsonVariantConst jsonColour1 = doc["colour1"];
+        if (!jsonColour1.isNull()) {
+            pattern.colour1(jsonColour1.as<uint32_t>());
         }
-        const uint32_t colour2 = doc["colour2"];
-        if (colour2) {
-            pattern.colour2(colour2);
+        const JsonVariantConst jsonColour2 = doc["colour2"];
+        if (!jsonColour2.isNull()) {
+            pattern.colour2(jsonColour2.as<uint32_t>());
         }
 
         webSocket.sendTXT(num, "{\"status\":\"OK\"}");
