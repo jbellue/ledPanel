@@ -51,7 +51,7 @@ void PatternsManager::increment() {
 }
 
 bool PatternsManager::changePattern(const uint8_t newPattern) {
-    if (newPattern < PLAIN || newPattern > LAST_PATTERN) {
+    if (newPattern > LAST_PATTERN) {
         return false;
     }
     _pattern = (PatternChoice)newPattern;
@@ -60,10 +60,9 @@ bool PatternsManager::changePattern(const uint8_t newPattern) {
 }
 
 void PatternsManager::speed(const uint8_t s) {
-    if (s != PatternSpeed::VERY_SLOW &&
-        s != PatternSpeed::SLOW &&
-        s != PatternSpeed::FAST &&
-        s != PatternSpeed::LUDICROUS) {
+    // s being unsigned, it can't be less than PatternSpeed::VERY_SLOW, 
+    // so it makes sense to only check if it's more than the fastest PatternSpeed
+    if (s > PatternSpeed::LUDICROUS) {
         _speed = PatternSpeed::MODERATE;
     }
     else {
