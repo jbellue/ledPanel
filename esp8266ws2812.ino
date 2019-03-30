@@ -49,7 +49,7 @@ void processReceivedText(uint8_t num, uint8_t* payload) {
     if (error) {
         const size_t capacity = JSON_OBJECT_SIZE(2);
         StaticJsonDocument<capacity> errorDoc;
-        errorDoc["error"] = "deserializeJson() failed";
+        errorDoc["error"] = F("deserializeJson() failed");
         errorDoc["errorText"] = error.c_str();
 
         const int jsonErrorStringSize = measureJson(errorDoc); 
@@ -87,24 +87,15 @@ void processReceivedText(uint8_t num, uint8_t* payload) {
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
     switch (type) {
-    case WStype_DISCONNECTED:
-        Serial.printf("[%u] Disconnected!\r\n", num);
-        break;
     case WStype_CONNECTED:
         sendSettingsToClient(num);
         break;
     case WStype_TEXT:
         processReceivedText(num, payload);
         break;
-    case WStype_BIN:
-        Serial.printf("[%u] get binary length: %u\r\n", num, length);
-        hexdump(payload, length);
-
-        // echo data back to browser
-        webSocket.sendBIN(num, payload, length);
-        break;
     default:
-        Serial.printf("Invalid WStype [%d]\r\n", type);
+        Serial.print(F("Ignored WStype "));
+        Serial.println(type);
         break;
     }
 }
@@ -117,24 +108,14 @@ void setup() {
     WiFiManager wifiManager;
     wifiManager.autoConnect();
 
-    Serial.print("\nServer IP is ");
-    Serial.println(WiFi.localIP());
-
-    configServer();
+    // There's no other endpoint, so send the index to every request
+    server.onNotFound([]() {
+        server.send_P(200, "text/html", index_html);
+    });
     server.begin();
 
     webSocket.begin();
     webSocket.onEvent(webSocketEvent);
-}
-
-void configServer() {
-    server.onNotFound([]() {
-        server.sendHeader("Access-Control-Allow-Origin", "*");
-        server.send(404, "text/plain", "Page not found");
-    });
-    server.on("/", []() {
-        server.send_P(200, "text/html", index_html);
-    });
 }
 
 void loop() {
