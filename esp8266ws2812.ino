@@ -16,7 +16,7 @@ PatternsManager pattern(&strip);
 ESP8266WebServer server(HTTP_PORT);
 WebSocketsServer webSocket = WebSocketsServer(WEBSOCKET_PORT);
 
-void sendSettingsToClient(uint8_t num) {
+void sendSettingsToClient(const uint8_t num) {
     const size_t jsonSize = JSON_ARRAY_SIZE(PatternChoice::LAST_PATTERN + 1) + (PatternChoice::LAST_PATTERN + 2)*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(5);
     StaticJsonDocument<jsonSize> doc;
 
@@ -42,7 +42,7 @@ void sendSettingsToClient(uint8_t num) {
     webSocket.sendTXT(num, jsonString);
 }
 
-void processReceivedText(uint8_t num, uint8_t* payload) {
+void processReceivedText(const uint8_t num, uint8_t* payload) {
     const size_t jsonSize = JSON_OBJECT_SIZE(3) + 30;
     StaticJsonDocument<jsonSize> doc;
     DeserializationError error = deserializeJson(doc, payload);
