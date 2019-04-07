@@ -70,6 +70,7 @@ body {
 <script>
 let connection; // websocket connection
 let brightnessSlider;
+let speedSlider;
 let colorPicker1;
 let colorPicker2;
 let patternsObject;
@@ -104,8 +105,19 @@ const changePatternEvent = e => {
     sendUpdate({pattern: e.target.value});
 }
 const updatePage = settings => {
-    if(settings.brightness) {
+    if("brightness" in settings) {
         brightnessSlider.value = settings.brightness;
+    }
+    if("speed" in settings) {
+        speedSlider.value = settings.speed;
+    }
+    if("pattern" in settings) {
+        // the radio buttons might not already be there at startup, so we check first
+        let radioToSelect = document.querySelectorAll("input[name=radioPattern]")[settings.pattern]; 
+        if (radioToSelect) {
+            showOrHideColourPickers(patternsObject[settings.pattern].numColour);
+            radioToSelect.checked = true;
+        }
     }
     if(settings.colour1) {
         colorPicker1.color.set(intToRgb(settings.colour1));
@@ -160,7 +172,8 @@ const setPatterns = (patterns, selectedPattern) => {
 ready(() => {
     colorPicker1 = new iro.ColorPicker('#color-picker-container1', {width:200, display: "inline-block", borderWidth: 1, borderColor: "#fff"});
     colorPicker2 = new iro.ColorPicker('#color-picker-container2', {width:200, display: "inline-block", borderWidth: 1, borderColor: "#fff"});
-    brightnessSlider = document.getElementById("brightness")
+    brightnessSlider = document.getElementById("brightness");
+    speedSlider = document.getElementById("speed");
     connection = new WebSocket('ws://' + location.hostname + ':81/', ['arduino']);
     connection.onerror = error => {
         console.log('WebSocket Error ', error);
@@ -179,10 +192,10 @@ ready(() => {
             }
         }
     };
-    colorPicker1.on('color:change', (color, event) => {
+    colorPicker1.on('color:change', color => {
         sendUpdate({colour1: rgbToInt(color.rgb)});
     });
-    colorPicker2.on('color:change', (color, event) => {
+    colorPicker2.on('color:change', color => {
         sendUpdate({colour2: rgbToInt(color.rgb)});
     });
 });

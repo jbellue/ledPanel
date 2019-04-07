@@ -58,30 +58,47 @@ void processReceivedText(const uint8_t num, uint8_t* payload) {
         webSocket.sendTXT(num, jsonErrorString);
     }
     else {
+        const size_t maxElementNumber = 3; // will be 5 when setting the colours callback works in the client
+        const size_t jsonSize = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(maxElementNumber); // 1 for "settings" then max number
+        StaticJsonDocument<jsonSize> outputDoc;
+        JsonObject settings = outputDoc.createNestedObject("settings");
         const JsonVariantConst jsonBrightness = doc["brightness"];
         if (!jsonBrightness.isNull()) {
-            pattern.brightness(jsonBrightness.as<uint8_t>());
+            const uint8_t newBrightness = jsonBrightness.as<uint8_t>();
+            pattern.brightness(newBrightness);
+            settings["brightness"] = newBrightness;
         }
 
         const JsonVariantConst jsonPattern = doc["pattern"];
         if (!jsonPattern.isNull()) {
-            pattern.changePattern(jsonPattern.as<uint8_t>());
+            const uint8_t newPattern = jsonPattern.as<uint8_t>();
+            pattern.changePattern(newPattern);
+            settings["pattern"] = newPattern;
         }
         const JsonVariantConst jsonSpeed = doc["speed"];
         if (!jsonSpeed.isNull()) {
-            pattern.speed(jsonSpeed.as<uint8_t>());
+            const uint8_t newSpeed = jsonSpeed.as<uint8_t>();
+            pattern.speed(newSpeed);
+            settings["speed"] = newSpeed;
         }
 
         const JsonVariantConst jsonColour1 = doc["colour1"];
         if (!jsonColour1.isNull()) {
-            pattern.colour1(jsonColour1.as<uint32_t>());
+            const uint32_t newColour1 = jsonColour1.as<uint32_t>();
+            pattern.colour1(newColour1);
+            // settings["colour1"] = newColour1;
         }
         const JsonVariantConst jsonColour2 = doc["colour2"];
         if (!jsonColour2.isNull()) {
-            pattern.colour2(jsonColour2.as<uint32_t>());
+            const uint32_t newColour2 = jsonColour2.as<uint32_t>();
+            pattern.colour2(newColour2);
+            // settings["colour2"] = newColour2;
         }
 
-        webSocket.sendTXT(num, "{\"status\":\"OK\"}");
+        const int jsonStringSize = measureJson(outputDoc); 
+        char jsonString[jsonStringSize + 1];
+        serializeJson(outputDoc, jsonString, sizeof(jsonString));
+        webSocket.broadcastTXT(jsonString);
     }
 }
 
