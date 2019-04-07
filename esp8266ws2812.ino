@@ -58,7 +58,7 @@ void processReceivedText(const uint8_t num, uint8_t* payload) {
         webSocket.sendTXT(num, jsonErrorString);
     }
     else {
-        const size_t maxElementNumber = 3; // will be 5 when setting the colours callback works in the client
+        const size_t maxElementNumber = 5;
         const size_t jsonSize = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(maxElementNumber); // 1 for "settings" then max number
         StaticJsonDocument<jsonSize> outputDoc;
         JsonObject settings = outputDoc.createNestedObject("settings");
@@ -86,13 +86,13 @@ void processReceivedText(const uint8_t num, uint8_t* payload) {
         if (!jsonColour1.isNull()) {
             const uint32_t newColour1 = jsonColour1.as<uint32_t>();
             pattern.colour1(newColour1);
-            // settings["colour1"] = newColour1;
+            settings["colour1"] = newColour1;
         }
         const JsonVariantConst jsonColour2 = doc["colour2"];
         if (!jsonColour2.isNull()) {
             const uint32_t newColour2 = jsonColour2.as<uint32_t>();
             pattern.colour2(newColour2);
-            // settings["colour2"] = newColour2;
+            settings["colour2"] = newColour2;
         }
 
         const int jsonStringSize = measureJson(outputDoc); 

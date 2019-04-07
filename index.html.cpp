@@ -192,10 +192,10 @@ ready(() => {
             }
         }
     };
-    colorPicker1.on('color:change', color => {
+    colorPicker1.on('input:end', color => {
         sendUpdate({colour1: rgbToInt(color.rgb)});
     });
-    colorPicker2.on('color:change', color => {
+    colorPicker2.on('input:end', color => {
         sendUpdate({colour2: rgbToInt(color.rgb)});
     });
 });
