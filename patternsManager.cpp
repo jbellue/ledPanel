@@ -10,7 +10,7 @@
 PatternsManager::PatternsManager(Adafruit_NeoPixel* strip) :
     _strip(strip),
     _pattern(PLAIN),
-    _colour1(0xFF0000),
+    _colour1(0xDFFF12), //some kind of warm yellow to start
     _colour2(0x00FF00) {
 }
 
