@@ -107,7 +107,49 @@ let patternBlink = {
     }
 }
 
-const pattern = patternBlink;
+let patternTwinkle = {
+    _totalSteps: 2,
+    _twinklingPixel: _strip.numPixels(),
+    totalSteps: function() {
+        return this._totalSteps;
+    },
+    start: function(colour1, colour2) {
+        update(1, colour1, colour2);
+    },
+    update: function(index, colour1, colour2) {
+        if (this._twinklingPixel >= _strip.numPixels()) {
+            if (!random(5)) {
+                this._twinklingPixel = random(_strip.numPixels());
+            }
+        }
+        else if (!random(2)) {
+            this._twinklingPixel = _strip.numPixels() + 1;
+        }
+        const pixelCount = _strip.numPixels();
+        for(let i = 0; i < pixelCount; ++i) {
+            _strip.setPixelColor(i, (i == this._twinklingPixel) ? colour2 : colour1);
+        }
+        _strip.show();
+    },
+    interval: function(s) {
+        switch(s) {
+        case 0:
+            return 160;
+        case 1:
+            return 80;
+        case 3:
+            return 40;
+        case 4:
+            return 20;
+        case 5:
+        default:
+            return 10;
+        }
+    }
+}
+
+const pattern = patternTwinkle;
+// const pattern = patternBlink;
 var patternManager = {
     _index: 0,
     _speed: 2,
@@ -130,9 +172,9 @@ var patternManager = {
         }
     },
     update: function() {
-            pattern.update(this._index, this._colour1, this._colour2);
-            this.increment();
-        }
+        pattern.update(this._index, this._colour1, this._colour2);
+        this.increment();
+    }
 
 };
 const changeSpeed = (newValue) => {
