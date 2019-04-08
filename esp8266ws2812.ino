@@ -1,5 +1,6 @@
 #include <WebSocketsServer.h>
 #include <ESP8266WebServer.h>
+#include <ArduinoOTA.h>
 #include <ArduinoJson.h>
 #include <WiFiManager.h>
 #include "patternsManager.h"
@@ -133,11 +134,14 @@ void setup() {
 
     webSocket.begin();
     webSocket.onEvent(webSocketEvent);
+
+    ArduinoOTA.begin();
 }
 
 void loop() {
     server.handleClient();
     webSocket.loop();
+    ArduinoOTA.handle();
     pattern.update();
 }
 
