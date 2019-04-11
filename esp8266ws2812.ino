@@ -18,9 +18,10 @@ ESP8266WebServer server(HTTP_PORT);
 WebSocketsServer webSocket = WebSocketsServer(WEBSOCKET_PORT);
 
 void sendSettingsToClient(const uint8_t num) {
-    const size_t jsonSize = JSON_ARRAY_SIZE(PatternChoice::LAST_PATTERN + 1) + (PatternChoice::LAST_PATTERN + 2)*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(5);
+    const size_t jsonSize = JSON_ARRAY_SIZE(PatternChoice::LAST_PATTERN + 1) + (PatternChoice::LAST_PATTERN + 1)*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5);
     StaticJsonDocument<jsonSize> doc;
 
+    doc["id"] = num;
     JsonObject settings = doc.createNestedObject("settings");
     settings["brightness"] = pattern.brightness();
     settings["colour1"] = pattern.colour1();
@@ -60,8 +61,12 @@ void processReceivedText(const uint8_t num, uint8_t* payload) {
     }
     else {
         const size_t maxElementNumber = 5;
-        const size_t jsonSize = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(maxElementNumber); // 1 for "settings" then max number
+        // we need to add two elements:
+        // 1 for the sender,
+        // 1 to hold the "settings" object
+        const size_t jsonSize = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(maxElementNumber);
         StaticJsonDocument<jsonSize> outputDoc;
+        outputDoc["sender"] = num;
         JsonObject settings = outputDoc.createNestedObject("settings");
         const JsonVariantConst jsonBrightness = doc["brightness"];
         if (!jsonBrightness.isNull()) {

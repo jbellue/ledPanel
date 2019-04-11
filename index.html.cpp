@@ -74,6 +74,7 @@ let speedSlider;
 let colorPicker1;
 let colorPicker2;
 let patternsObject;
+let websocketId;
 
 const sendUpdate = data => {
     if (connection.readyState == 1) { // OPEN
@@ -178,24 +179,32 @@ ready(() => {
     connection.onerror = error => {
         console.log('WebSocket Error ', error);
     };
-    connection.onmessage = (e) => {
-        console.log(e.data);
-        jsonData = JSON.parse(e.data);
+    connection.onmessage = rawData => {
+        console.log(rawData.data);
+        jsonData = JSON.parse(rawData.data);
         if(jsonData) {
-            let selectedPattern = -1;
-            if (jsonData.settings) {
-                updatePage(jsonData.settings);
-                selectedPattern = jsonData.settings.pattern;
+            if ("id" in jsonData) {
+                // this should on connection, always set data
+                websocketId = jsonData.id;
+                let selectedPattern = -1;
+                if (jsonData.settings) {
+                    updatePage(jsonData.settings);
+                    selectedPattern = jsonData.settings.pattern;
+                }
+                if (jsonData.patterns) {
+                    setPatterns(jsonData.patterns, selectedPattern);
+                }
             }
-            if (jsonData.patterns) {
-                setPatterns(jsonData.patterns, selectedPattern);
+            else if (jsonData.settings && ("sender" in jsonData) && jsonData.sender != websocketId) {
+                updatePage(jsonData.settings);
             }
         }
     };
-    colorPicker1.on('input:end', color => {
+    // need ["input:start", "input:move", "input:end"] instead of just 'input:change' for some reason
+    colorPicker1.on(["input:start", "input:move", "input:end"], color => {
         sendUpdate({colour1: rgbToInt(color.rgb)});
     });
-    colorPicker2.on('input:end', color => {
+    colorPicker2.on(["input:start", "input:move", "input:end"], color => {
         sendUpdate({colour2: rgbToInt(color.rgb)});
     });
 });
