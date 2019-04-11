@@ -135,6 +135,11 @@ void setup() {
     webSocket.begin();
     webSocket.onEvent(webSocketEvent);
 
+    ArduinoOTA.onEnd([]() {
+        webSocket.disconnect();
+        ESP.reset();
+    });
+
     ArduinoOTA.begin();
 }
 
