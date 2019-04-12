@@ -43,7 +43,7 @@ body {
 }
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://cdn.jsdelivr.net/npm/@jaames/iro/dist/iro.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@4.3.2/dist/iro.min.js"></script>
     </head>
     <body>
         <h1>LED Panel</h1>
@@ -184,7 +184,7 @@ ready(() => {
         jsonData = JSON.parse(rawData.data);
         if(jsonData) {
             if ("id" in jsonData) {
-                // this should on connection, always set data
+                // this should be on connection, so always set the data
                 websocketId = jsonData.id;
                 let selectedPattern = -1;
                 if (jsonData.settings) {
@@ -200,11 +200,10 @@ ready(() => {
             }
         }
     };
-    // need ["input:start", "input:move", "input:end"] instead of just 'input:change' for some reason
-    colorPicker1.on(["input:start", "input:move", "input:end"], color => {
+    colorPicker1.on("input:change", color => {
         sendUpdate({colour1: rgbToInt(color.rgb)});
     });
-    colorPicker2.on(["input:start", "input:move", "input:end"], color => {
+    colorPicker2.on("input:change", color => {
         sendUpdate({colour2: rgbToInt(color.rgb)});
     });
 });
