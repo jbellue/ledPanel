@@ -4,13 +4,12 @@
 #include <ArduinoJson.h>
 #include <WiFiManager.h>
 #include "patternsManager.h"
+#include "indexHtml.h"
 
-#define LED_PIN   D4
+#define LED_PIN   2
 #define LED_COUNT 12
 #define HTTP_PORT 80
 #define WEBSOCKET_PORT 81
-
-extern const char index_html[];
 
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 PatternsManager pattern(&strip);
@@ -133,7 +132,7 @@ void setup() {
 
     // There's no other endpoint, so send the index to every request
     server.onNotFound([]() {
-        server.send_P(200, "text/html", index_html);
+        // server.send_P(200, "text/html", index_html);
     });
     server.begin();
 
