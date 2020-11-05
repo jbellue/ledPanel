@@ -4,6 +4,7 @@ body {
     font-family: 'Ubuntu', sans-serif;
     text-align: center;
 }
+
 .wrap { 
     min-height: 75vh;
     max-width: 720px;
@@ -11,12 +12,17 @@ body {
     display: flex;
     flex-direction: row;
 }
+
 .wrap .half {
     width: 50%;
 }
-.range label {display: block;}
-.range input {width: 100%;}
+
+.range label { display: block; }
+
+.range input { width: 100%; }
+
 .radioButton { display: none; }
+
 .radioButton + label {
     float: left;
     padding: 1em;
@@ -26,9 +32,11 @@ body {
     border-radius: 4px;
     min-width: 150px;
 }
+
 .radioButton:hover + label {
     background: #5a5f73;
 }
+
 .radioButton:checked + label {
     color: #000;
     background: #47cf73;
