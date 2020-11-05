@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 #include <WebSocketsServer.h>
 
 #include <ESP8266WiFi.h>
