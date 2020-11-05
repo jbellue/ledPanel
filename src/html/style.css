@@ -1,11 +1,11 @@
 body {
     color: #fff;
-    background: #171F30;
+    background: #171f30;
     font-family: 'Ubuntu', sans-serif;
     text-align: center;
 }
 
-.wrap { 
+.wrap {
     min-height: 75vh;
     max-width: 720px;
     margin: 0 auto;
