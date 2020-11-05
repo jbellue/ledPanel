@@ -11,13 +11,13 @@ const sendUpdate = data => {
     }
 }
 const ready = fn => {
-    if (document.readyState !== 'loading'){
+    if (document.readyState !== "loading"){
         fn();
     } else if (document.addEventListener) {
-        document.addEventListener('DOMContentLoaded', fn);
+        document.addEventListener("DOMContentLoaded", fn);
     } else {
-        document.attachEvent('onreadystatechange', () => {
-            if (document.readyState != 'loading') {
+        document.attachEvent("onreadystatechange", () => {
+            if (document.readyState != "loading") {
                 fn();
             }
         });
@@ -66,10 +66,10 @@ const updatePage = settings => {
 
 const showOrHideColourPickers = num => {
     if (num === 0) {
-        document.getElementById('color-picker-container').style.display = "none";
+        document.getElementById("color-picker-container").style.display = "none";
     }
     else {
-        document.getElementById('color-picker-container').style.display = "";
+        document.getElementById("color-picker-container").style.display = "";
         if (num === 1) {
             if (colorPicker.colors.length > 1) {
                 colorPicker.removeColor(1);
@@ -77,7 +77,7 @@ const showOrHideColourPickers = num => {
         }
         else {
             if (colorPicker.colors.length === 1) {
-                colorPicker.addColor('rgb(100%, 100%, 100%)');
+                colorPicker.addColor("rgb(100%, 100%, 100%)");
             }
         }
     }
@@ -88,16 +88,16 @@ const setPatterns = patterns => {
     let parent = document.getElementById("patternsGroup");
     const arraySize = patterns.length;
     for (let i = 0; i < arraySize; ++i) {
-        let radioDiv = document.createElement('div');
-        let radioInput = document.createElement('input');
+        let radioDiv = document.createElement("div");
+        let radioInput = document.createElement("input");
         radioInput.classList.add("radioButton");
         radioInput.type = "radio";
-        const radioId = patterns[i].name.replace(/\s/g,'');
-        radioInput.id = patterns[i].name.replace(/\s/g,'');
+        const radioId = patterns[i].name.replace(/\s/g,"");
+        radioInput.id = patterns[i].name.replace(/\s/g,"");
         radioInput.name = "radioPattern";
         radioInput.value = i;
         radioInput.onchange = changePatternEvent;
-        let radioLabel = document.createElement('label');
+        let radioLabel = document.createElement("label");
         radioLabel.htmlFor = radioId;
         radioLabel.innerText = patterns[i].name;
         radioDiv.appendChild(radioInput);
@@ -107,17 +107,17 @@ const setPatterns = patterns => {
 };
 
 const setSelectedPattern = selectedPattern => {
-    document.querySelector(`input[value='${selectedPattern}']`).checked = true;
+    document.querySelector(`input[value="${selectedPattern}"]`).checked = true;
 };
 
 const getReady = () => {
-    colorPicker = new window.iro.ColorPicker('#color-picker-container', {width:200, display: "inline-block", borderWidth: 2, borderColor: "#fff"});
+    colorPicker = new window.iro.ColorPicker("#color-picker-container", {width:200, display: "inline-block", borderWidth: 2, borderColor: "#fff"});
     brightnessSlider = document.getElementById("brightness");
     speedSlider = document.getElementById("speed");
-    connection = new WebSocket('ws://' + location.hostname + ':81/', ['arduino']);
+    connection = new WebSocket("ws://" + location.hostname + ":81/", ["arduino"]);
 
     connection.onerror = error => {
-        console.log('WebSocket Error ', error);
+        console.log("WebSocket Error ", error);
     };
     connection.onmessage = rawData => {
         console.log(rawData.data);
