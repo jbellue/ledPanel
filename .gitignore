@@ -1,6 +1,4 @@
-esp8266ws2812.esp8266.esp8266.d1_mini.bin
-esp8266ws2812.esp8266.esp8266.d1_mini.elf
+.pio
 .vscode/
-index.html
-private.key
-public.key
+node_modules/
+src/static/

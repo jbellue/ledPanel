@@ -38,8 +38,8 @@ public:
     uint8_t brightness() {return _strip->getBrightness();}
     void brightness(const uint8_t brightness);
 private:
-    PatternChoice _pattern;
     Adafruit_NeoPixel* _strip;
+    PatternChoice _pattern;
     Pattern* _patterns[LAST_PATTERN + 1];
     PatternSpeed _speed;
 

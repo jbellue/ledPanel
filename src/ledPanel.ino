@@ -1,20 +1,50 @@
 #include <WebSocketsServer.h>
-#include <ESP8266WebServer.h>
+
+#include <ESP8266WiFi.h>
+
+#include <ESPAsyncWiFiManager.h>
+#include <ESPAsyncWebServer.h>
+
 #include <ArduinoOTA.h>
 #include <ArduinoJson.h>
-#include <WiFiManager.h>
 #include "patternsManager.h"
-#include "indexHtml.h"
+
+// Include the header file we create with gulp
+#include "static/index.html.gz.h"
 
 #define LED_PIN   2
 #define LED_COUNT 12
 #define HTTP_PORT 80
 #define WEBSOCKET_PORT 81
 
+// Variable to hold the last modification datetime
+char last_modified[50];
+
+AsyncWebServer server = AsyncWebServer(HTTP_PORT);
+DNSServer dns;
+
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 PatternsManager pattern(&strip);
-ESP8266WebServer server(HTTP_PORT);
 WebSocketsServer webSocket = WebSocketsServer(WEBSOCKET_PORT);
+
+void onHome(AsyncWebServerRequest *request) {
+    // Check if the client already has the same version and respond with a 304 (Not modified)
+    if (request->header("If-Modified-Since").equals(last_modified)) {
+        request->send(304);
+
+    } else {
+        // Dump the byte array in PROGMEM with a 200 HTTP code (OK)
+        AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", index_html_gz, index_html_gz_len);
+
+        // Tell the browswer the contemnt is Gzipped
+        response->addHeader("Content-Encoding", "gzip");
+
+        // And set the last-modified datetime so we can check if we need to send it again next time or not
+        response->addHeader("Last-Modified", last_modified);
+
+        request->send(response);
+    }
+}
 
 void sendSettingsToClient(const uint8_t num) {
     const size_t jsonSize = JSON_ARRAY_SIZE(PatternChoice::LAST_PATTERN + 1) + (PatternChoice::LAST_PATTERN + 1)*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5);
@@ -127,13 +157,14 @@ void setup() {
 
     Serial.begin(115200);
 
-    WiFiManager wifiManager;
+    // Populate the last modification date based on build datetime
+    sprintf(last_modified, "%s %s GMT", __DATE__, __TIME__);
+
+    AsyncWiFiManager wifiManager(&server, &dns);
     wifiManager.autoConnect();
 
-    // There's no other endpoint, so send the index to every request
-    server.onNotFound([]() {
-        // server.send_P(200, "text/html", index_html);
-    });
+    server.on("/", HTTP_GET, onHome);
+    server.onNotFound([](AsyncWebServerRequest *request){ request->send(404); });
     server.begin();
 
     webSocket.begin();
@@ -148,7 +179,6 @@ void setup() {
 }
 
 void loop() {
-    server.handleClient();
     webSocket.loop();
     ArduinoOTA.handle();
     pattern.update();

@@ -57,6 +57,7 @@ bool PatternsManager::changePattern(const uint8_t newPattern) {
     _pattern = (PatternChoice)newPattern;
     _index = 0;
     _patterns[_pattern]->start(_colour1, _colour2);
+    return true;
 }
 
 void PatternsManager::speed(const uint8_t s) {
