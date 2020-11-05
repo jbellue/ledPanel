@@ -10,7 +10,7 @@
     "gulp": "^4.0.0",
     "gulp-clean-css": "^3.4.2",
     "gulp-gzip": "^1.4.0",
-    "gulp-htmlmin": "^2.0.0",
+    "gulp-htmlmin": "^5.0.1",
     "gulp-inline": "^0.1.1",
     "gulp-terser": "^1.4.1"
   },
