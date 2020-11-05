@@ -6,12 +6,12 @@ let patternsObject;
 let websocketId;
 
 const sendUpdate = data => {
-    if (connection.readyState == 1) { // OPEN
+    if (connection.readyState === 1) { // OPEN
         connection.send(JSON.stringify(data));
     }
 }
 const ready = fn => {
-    if (document.readyState != 'loading'){
+    if (document.readyState !== 'loading'){
         fn();
     } else if (document.addEventListener) {
         document.addEventListener('DOMContentLoaded', fn);
@@ -53,11 +53,11 @@ const updatePage = settings => {
         colorPicker.colors[0].rgb = intToRgb(settings.colour1);
     }
     if(settings.colour2) {
-        if (colorPicker.colors.length == 2) {
+        if (colorPicker.colors.length === 2) {
             colorPicker.colors[1].rgb = intToRgb(settings.colour2);
         }
         else {
-            if (patternsObject[settings.pattern].numColour == 2) {
+            if (patternsObject[settings.pattern].numColour === 2) {
                 colorPicker.addColor(intToRgb(settings.colour2));
             }
         }
@@ -65,18 +65,18 @@ const updatePage = settings => {
 };
 
 const showOrHideColourPickers = num => {
-    if (num == 0) {
+    if (num === 0) {
         document.getElementById('color-picker-container').style.display = "none";
     }
     else {
         document.getElementById('color-picker-container').style.display = "";
-        if (num == 1) {
+        if (num === 1) {
             if (colorPicker.colors.length > 1) {
                 colorPicker.removeColor(1);
             }
         }
         else {
-            if (colorPicker.colors.length == 1) {
+            if (colorPicker.colors.length === 1) {
                 colorPicker.addColor('rgb(100%, 100%, 100%)');
             }
         }
@@ -121,7 +121,7 @@ const getReady = () => {
     };
     connection.onmessage = rawData => {
         console.log(rawData.data);
-        jsonData = JSON.parse(rawData.data);
+        const jsonData = JSON.parse(rawData.data);
         if(jsonData) {
             if ("id" in jsonData) {
                 // this should be on connection, so always set the data
