@@ -9,7 +9,8 @@ const sendUpdate = data => {
     if (connection.readyState === 1) { // OPEN
         connection.send(JSON.stringify(data));
     }
-}
+};
+
 const ready = fn => {
     if (document.readyState !== "loading"){
         fn();
@@ -17,7 +18,7 @@ const ready = fn => {
         document.addEventListener("DOMContentLoaded", fn);
     } else {
         document.attachEvent("onreadystatechange", () => {
-            if (document.readyState != "loading") {
+            if (document.readyState !== "loading") {
                 fn();
             }
         });
@@ -27,9 +28,30 @@ const ready = fn => {
 const rgbToInt = rgb => {
     return (rgb.r << 16) | (rgb.g << 8) | (rgb.b);
 }
+
 const intToRgb = data => {
     return {r: (data & 0xff0000) >> 16, g: (data & 0x00ff00) >> 8, b: (data & 0x0000ff)};
 }
+
+const showOrHideColourPickers = num => {
+    if (num === 0) {
+        document.getElementById("color-picker-container").style.display = "none";
+    }
+    else {
+        document.getElementById("color-picker-container").style.display = "";
+        if (num === 1) {
+            if (colorPicker.colors.length > 1) {
+                colorPicker.removeColor(1);
+            }
+        }
+        else {
+            if (colorPicker.colors.length === 1) {
+                colorPicker.addColor("rgb(100%, 100%, 100%)");
+            }
+        }
+    }
+};
+
 const changePatternEvent = e => {
     showOrHideColourPickers(patternsObject[e.target.value].numColour);
     sendUpdate({pattern: e.target.value});
@@ -59,25 +81,6 @@ const updatePage = settings => {
         else {
             if (patternsObject[settings.pattern].numColour === 2) {
                 colorPicker.addColor(intToRgb(settings.colour2));
-            }
-        }
-    }
-};
-
-const showOrHideColourPickers = num => {
-    if (num === 0) {
-        document.getElementById("color-picker-container").style.display = "none";
-    }
-    else {
-        document.getElementById("color-picker-container").style.display = "";
-        if (num === 1) {
-            if (colorPicker.colors.length > 1) {
-                colorPicker.removeColor(1);
-            }
-        }
-        else {
-            if (colorPicker.colors.length === 1) {
-                colorPicker.addColor("rgb(100%, 100%, 100%)");
             }
         }
     }
@@ -134,7 +137,7 @@ const getReady = () => {
                     setSelectedPattern(jsonData.settings.pattern);
                 }
             }
-            else if (jsonData.settings && ("sender" in jsonData) && jsonData.sender != websocketId) {
+            else if (jsonData.settings && ("sender" in jsonData) && jsonData.sender !== websocketId) {
                 updatePage(jsonData.settings);
             }
         }
