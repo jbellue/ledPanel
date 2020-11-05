@@ -9,14 +9,12 @@ const inline = require('gulp-inline');
 
 const dataFolder = 'src/static/';
 
-gulp.task('clean', function(done) {
-    del([ dataFolder + '*']);
-    done();
-    return true;
-});
+const clean = cb=> {
+    del.sync([ dataFolder + '*']);
+    cb();
+};
 
-gulp.task('buildfs_inline', gulp.series('clean', done => {
-    done();
+const buildfs_inline = () => {
     return gulp.src('src/html/*.html')
         .pipe(inline({
             base: 'html/',
@@ -32,34 +30,38 @@ gulp.task('buildfs_inline', gulp.series('clean', done => {
         }))
         .pipe(gzip())
         .pipe(gulp.dest(dataFolder));
-}));
+};
 
-gulp.task('buildfs_embeded', gulp.series('buildfs_inline', async () => {
+const buildfs_embedded = (cb) => {
+    const source = dataFolder + 'index.html.gz';
+    const destination = dataFolder + 'index.html.gz.h';
 
-    var source = dataFolder + 'index.html.gz';
-    var destination = dataFolder + 'index.html.gz.h';
-
-    var wstream = fs.createWriteStream(destination);
+    const wstream = fs.createWriteStream(destination);
     wstream.on('error', function (err) {
         console.log(err);
     });
 
-    var data = fs.readFileSync(source);
+    const data = fs.readFileSync(source);
 
     wstream.write('#define index_html_gz_len ' + data.length + '\n');
     wstream.write('const uint8_t index_html_gz[] PROGMEM = {')
 
-    for (i=0; i<data.length; i++) {
-        if (i % 1000 == 0) wstream.write("\n");
+    for (i = 0; i < data.length; i++) {
+        if (i % 1000 == 0) {
+            wstream.write("\n");
+        }
         wstream.write('0x' + ('00' + data[i].toString(16)).slice(-2));
-        if (i<data.length-1) wstream.write(',');
+        if (i < data.length - 1) {
+            wstream.write(',');
+        }
     }
 
     wstream.write('\n};')
     wstream.end();
 
     del([source]);
+    cb();
+};
 
-}));
-
-gulp.task('default', gulp.series('buildfs_embeded'));
+gulp.task('clean', clean);
+gulp.task('default', gulp.series(clean, buildfs_inline, buildfs_embedded));
