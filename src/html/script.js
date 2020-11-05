@@ -5,13 +5,13 @@ let colorPicker;
 let patternsObject;
 let websocketId;
 
-const sendUpdate = data => {
+const sendUpdate = (data) => {
     if (connection.readyState === 1) { // OPEN
         connection.send(JSON.stringify(data));
     }
 };
 
-const ready = fn => {
+const ready = (fn) => {
     if (document.readyState !== "loading"){
         fn();
     } else if (document.addEventListener) {
@@ -25,15 +25,15 @@ const ready = fn => {
     }
 };
 
-const rgbToInt = rgb => {
+const rgbToInt = (rgb) => {
     return (rgb.r << 16) | (rgb.g << 8) | (rgb.b);
-}
+};
 
-const intToRgb = data => {
+const intToRgb = (data) => {
     return {r: (data & 0xff0000) >> 16, g: (data & 0x00ff00) >> 8, b: (data & 0x0000ff)};
-}
+};
 
-const showOrHideColourPickers = num => {
+const showOrHideColourPickers = (num) => {
     if (num === 0) {
         document.getElementById("color-picker-container").style.display = "none";
     }
@@ -52,11 +52,12 @@ const showOrHideColourPickers = num => {
     }
 };
 
-const changePatternEvent = e => {
+const changePatternEvent = (e) => {
     showOrHideColourPickers(patternsObject[e.target.value].numColour);
     sendUpdate({pattern: e.target.value});
-}
-const updatePage = settings => {
+};
+
+const updatePage = (settings) => {
     if("brightness" in settings) {
         brightnessSlider.value = settings.brightness;
     }
@@ -86,7 +87,7 @@ const updatePage = settings => {
     }
 };
 
-const setPatterns = patterns => {
+const setPatterns = (patterns) => {
     patternsObject = patterns;
     let parent = document.getElementById("patternsGroup");
     const arraySize = patterns.length;
@@ -109,7 +110,7 @@ const setPatterns = patterns => {
     }
 };
 
-const setSelectedPattern = selectedPattern => {
+const setSelectedPattern = (selectedPattern) => {
     document.querySelector(`input[value="${selectedPattern}"]`).checked = true;
 };
 
@@ -147,4 +148,4 @@ const getReady = () => {
         data[`colour${color.index + 1}`] = rgbToInt(color.rgb);
         sendUpdate(data);
     });
-}
+};
