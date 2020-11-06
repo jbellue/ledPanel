@@ -9,7 +9,7 @@ const inline = require("gulp-inline");
 
 const dataFolder = "src/static/";
 
-const clean = cb => {
+const clean = (cb) => {
     del.sync([ dataFolder + "*"]);
     cb();
 };

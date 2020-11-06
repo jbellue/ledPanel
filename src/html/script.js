@@ -120,10 +120,10 @@ const getReady = () => {
     speedSlider = document.getElementById("speed");
     connection = new WebSocket("ws://" + location.hostname + ":81/", ["arduino"]);
 
-    connection.onerror = error => {
+    connection.onerror = (error) => {
         console.log("WebSocket Error ", error);
     };
-    connection.onmessage = rawData => {
+    connection.onmessage = (rawData) => {
         console.log(rawData.data);
         const jsonData = JSON.parse(rawData.data);
         if(jsonData) {
@@ -143,8 +143,8 @@ const getReady = () => {
             }
         }
     };
-    colorPicker.on(["input:move", "input:end"], color => {
-        let data = {}
+    colorPicker.on(["input:move", "input:end"], (color) => {
+        let data = {};
         data[`colour${color.index + 1}`] = rgbToInt(color.rgb);
         sendUpdate(data);
     });
