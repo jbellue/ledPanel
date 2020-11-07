@@ -20,7 +20,7 @@ public:
     PatternsManager(Adafruit_NeoPixel* strip);
 
     void getPatternsInfo(const char** dest, uint8_t numColour[]);
-    
+
     void begin();
 
     bool changePattern(uint8_t newPattern);
