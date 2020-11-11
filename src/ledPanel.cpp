@@ -80,7 +80,7 @@ void processReceivedText(const uint8_t num, uint8_t* payload) {
     if (error) {
         const size_t capacity = JSON_OBJECT_SIZE(2);
         StaticJsonDocument<capacity> errorDoc;
-        errorDoc["error"] = F("deserializeJson() failed");
+        errorDoc["error"] = "deserializeJson() failed";
         errorDoc["errorText"] = error.c_str();
 
         const size_t jsonErrorStringSize = measureJson(errorDoc); 
