@@ -69,7 +69,7 @@ void sendSettingsToClient(const uint8_t num) {
         pattern["name"] = patternsName[i];
         pattern["numColour"] = patternsColourNumber[i];
     }
-    const int jsonStringSize = measureJson(doc); 
+    const size_t jsonStringSize = measureJson(doc); 
     char jsonString[jsonStringSize + 1];
     serializeJson(doc, jsonString, sizeof(jsonString));
     webSocket.sendTXT(num, jsonString);
@@ -85,7 +85,7 @@ void processReceivedText(const uint8_t num, uint8_t* payload) {
         errorDoc["error"] = F("deserializeJson() failed");
         errorDoc["errorText"] = error.c_str();
 
-        const int jsonErrorStringSize = measureJson(errorDoc); 
+        const size_t jsonErrorStringSize = measureJson(errorDoc); 
         char jsonErrorString[jsonErrorStringSize + 1];
         serializeJson(errorDoc, jsonErrorString, sizeof(jsonErrorString));
         webSocket.sendTXT(num, jsonErrorString);
@@ -132,7 +132,7 @@ void processReceivedText(const uint8_t num, uint8_t* payload) {
             settings["colour2"] = newColour2;
         }
 
-        const int jsonStringSize = measureJson(outputDoc); 
+        const size_t jsonStringSize = measureJson(outputDoc); 
         char jsonString[jsonStringSize + 1];
         serializeJson(outputDoc, jsonString, sizeof(jsonString));
         webSocket.broadcastTXT(jsonString);
