@@ -180,7 +180,6 @@ void setup() {
 }
 
 void loop() {
-    webSocket.loop();
     ArduinoOTA.handle();
     pattern.update();
 }
