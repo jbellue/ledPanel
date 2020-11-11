@@ -22,8 +22,6 @@
 // Variable to hold the last modification datetime
 char last_modified[50];
 
-AsyncWebServer server = AsyncWebServer(HTTP_PORT);
-
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 PatternsManager pattern(&strip);
 WebSocketsServer webSocket = WebSocketsServer(WEBSOCKET_PORT);
@@ -154,6 +152,7 @@ void setup() {
     // Populate the last modification date based on build datetime
     sprintf(last_modified, "%s %s GMT", __DATE__, __TIME__);
 
+    AsyncWebServer server(HTTP_PORT);
     DNSServer dns;
     AsyncWiFiManager wifiManager(&server, &dns);
     wifiManager.autoConnect();
