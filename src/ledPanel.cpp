@@ -140,17 +140,11 @@ void processReceivedText(const uint8_t num, uint8_t* payload) {
 }
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
-    switch (type) {
-    case WStype_CONNECTED:
+    if (type == WStype_CONNECTED) {
         sendSettingsToClient(num);
-        break;
-    case WStype_TEXT:
+    }
+    else if (type == WStype_TEXT) {
         processReceivedText(num, payload);
-        break;
-    default:
-        Serial.print(F("Ignored WStype "));
-        Serial.println(type);
-        break;
     }
 }
 
