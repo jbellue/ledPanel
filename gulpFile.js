@@ -44,7 +44,7 @@ const buildfsEmbedded = (cb) => {
     const data = fs.readFileSync(source);
 
     wstream.write("#define index_html_gz_len " + data.length + "\n");
-    wstream.write("const uint8_t index_html_gz[] PROGMEM = {");
+    wstream.write("const uint8_t index_html_gz[] = {");
 
     for (let i = 0; i < data.length; i++) {
         if (i % 1000 === 0) {
