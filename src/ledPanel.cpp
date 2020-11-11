@@ -33,7 +33,8 @@ void onHome(AsyncWebServerRequest *request) {
     if (request->header("If-Modified-Since").equals(last_modified)) {
         request->send(304);
 
-    } else {
+    }
+    else {
         // Dump the byte array in PROGMEM with a 200 HTTP code (OK)
         AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", index_html_gz, index_html_gz_len);
 
@@ -156,8 +157,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 void setup() {
     pattern.begin();
 
-    Serial.begin(115200);
-
     // Populate the last modification date based on build datetime
     sprintf(last_modified, "%s %s GMT", __DATE__, __TIME__);
 
@@ -185,4 +184,3 @@ void loop() {
     ArduinoOTA.handle();
     pattern.update();
 }
-
