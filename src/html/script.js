@@ -30,7 +30,9 @@ const rgbToInt = (rgb) => {
 };
 
 const intToRgb = (data) => {
-    return {r: (data & 0xff0000) >> 16, g: (data & 0x00ff00) >> 8, b: (data & 0x0000ff)};
+    return {r: (data & 0xff0000) >> 16,
+            g: (data & 0x00ff00) >> 8,
+            b: (data & 0x0000ff)};
 };
 
 const showOrHideColourPickers = (num) => {
@@ -97,7 +99,7 @@ const setPatterns = (patterns) => {
         radioInput.classList.add("radioButton");
         radioInput.type = "radio";
         const radioId = patterns[i].name.replace(/\s/g,"");
-        radioInput.id = patterns[i].name.replace(/\s/g,"");
+        radioInput.id = radioId;
         radioInput.name = "radioPattern";
         radioInput.value = i;
         radioInput.onchange = changePatternEvent;
