@@ -120,7 +120,7 @@ const getReady = () => {
     colorPicker = new window.iro.ColorPicker("#color-picker-container", {width:200, display: "inline-block", borderWidth: 2, borderColor: "#fff"});
     brightnessSlider = document.getElementById("brightness");
     speedSlider = document.getElementById("speed");
-    connection = new WebSocket("ws://" + location.hostname + ":81/", ["arduino"]);
+    connection = new WebSocket(`ws://${location.hostname}/ws`, ["arduino"]);
 
     connection.onerror = (error) => {
         console.log("WebSocket Error ", error);

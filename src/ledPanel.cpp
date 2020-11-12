@@ -1,7 +1,4 @@
 #include <Arduino.h>
-
-#include <WebSocketsServer.h>
-
 #include <ESP8266WiFi.h>
 
 #include <ESPAsyncWiFiManager.h>
@@ -25,7 +22,7 @@ AsyncWebServer server = AsyncWebServer(HTTP_PORT);
 
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 PatternsManager pattern(&strip);
-WebSocketsServer webSocket = WebSocketsServer(WEBSOCKET_PORT);
+AsyncWebSocket ws("/ws");
 
 void onHome(AsyncWebServerRequest *request) {
     // Check if the client already has the same version and respond with a 304 (Not modified)
@@ -47,11 +44,11 @@ void onHome(AsyncWebServerRequest *request) {
     }
 }
 
-void sendSettingsToClient(const uint8_t num) {
+void sendSettingsToClient(const uint8_t clientID) {
     const size_t jsonSize = JSON_ARRAY_SIZE(PatternChoice::LAST_PATTERN + 1) + (PatternChoice::LAST_PATTERN + 1)*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5);
     StaticJsonDocument<jsonSize> doc;
 
-    doc["id"] = num;
+    doc["id"] = clientID;
     JsonObject settings = doc.createNestedObject("settings");
     settings["brightness"] = pattern.brightness();
     settings["colour1"] = pattern.colour1();
@@ -71,10 +68,10 @@ void sendSettingsToClient(const uint8_t num) {
     const size_t jsonStringSize = measureJson(doc); 
     char jsonString[jsonStringSize + 1];
     serializeJson(doc, jsonString, sizeof(jsonString));
-    webSocket.sendTXT(num, jsonString);
+    ws.text(clientID, jsonString);
 }
 
-void processReceivedText(const uint8_t num, uint8_t* payload) {
+void processReceivedText(const uint8_t clientID, uint8_t* payload) {
     const size_t jsonSize = JSON_OBJECT_SIZE(3) + 30;
     StaticJsonDocument<jsonSize> doc;
     DeserializationError error = deserializeJson(doc, payload);
@@ -87,7 +84,7 @@ void processReceivedText(const uint8_t num, uint8_t* payload) {
         const size_t jsonErrorStringSize = measureJson(errorDoc); 
         char jsonErrorString[jsonErrorStringSize + 1];
         serializeJson(errorDoc, jsonErrorString, sizeof(jsonErrorString));
-        webSocket.sendTXT(num, jsonErrorString);
+        ws.text(clientID, jsonErrorString);
     }
     else {
         const size_t maxElementNumber = 5;
@@ -96,7 +93,7 @@ void processReceivedText(const uint8_t num, uint8_t* payload) {
         // 1 to hold the "settings" object
         const size_t jsonSize = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(maxElementNumber);
         StaticJsonDocument<jsonSize> outputDoc;
-        outputDoc["sender"] = num;
+        outputDoc["sender"] = clientID;
         JsonObject settings = outputDoc.createNestedObject("settings");
         const JsonVariantConst jsonBrightness = doc["brightness"];
         if (!jsonBrightness.isNull()) {
@@ -134,16 +131,20 @@ void processReceivedText(const uint8_t num, uint8_t* payload) {
         const size_t jsonStringSize = measureJson(outputDoc); 
         char jsonString[jsonStringSize + 1];
         serializeJson(outputDoc, jsonString, sizeof(jsonString));
-        webSocket.broadcastTXT(jsonString);
+        ws.textAll(jsonString);
     }
 }
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
-    if (type == WStype_CONNECTED) {
-        sendSettingsToClient(num);
+
+void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len) {
+    if (type == WS_EVT_CONNECT) {
+        sendSettingsToClient(client->id());
     }
-    else if (type == WStype_TEXT) {
-        processReceivedText(num, payload);
+    else if(type == WS_EVT_DATA) {
+        AwsFrameInfo * info = (AwsFrameInfo*)arg;
+        if(info->opcode == WS_TEXT) {
+            processReceivedText(client->id(), data);
+        }
     }
 }
 
@@ -161,10 +162,8 @@ void setup() {
     server.onNotFound([](AsyncWebServerRequest *request){ request->send(404); });
     server.begin();
 
-    webSocket.begin();
-    webSocket.onEvent(webSocketEvent);
-
-    
+    ws.onEvent(onWsEvent);
+    server.addHandler(&ws);
 }
 
 void loop() {
