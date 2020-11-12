@@ -13,7 +13,6 @@
 #define LED_PIN   2
 #define LED_COUNT 12
 #define HTTP_PORT 80
-#define WEBSOCKET_PORT 81
 
 // Variable to hold the last modification datetime
 char last_modified[25];
@@ -28,7 +27,6 @@ void onHome(AsyncWebServerRequest *request) {
     // Check if the client already has the same version and respond with a 304 (Not modified)
     if (request->header("If-Modified-Since").equals(last_modified)) {
         request->send(304);
-
     }
     else {
         // Dump the byte array in PROGMEM with a 200 HTTP code (OK)
