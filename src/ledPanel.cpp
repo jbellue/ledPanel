@@ -16,7 +16,7 @@
 #define WEBSOCKET_PORT 81
 
 // Variable to hold the last modification datetime
-char last_modified[50];
+char last_modified[25];
 
 AsyncWebServer server = AsyncWebServer(HTTP_PORT);
 
