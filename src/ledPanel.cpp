@@ -3,6 +3,7 @@
 #include <ESPAsyncWiFiManager.h>
 #include <ESPAsyncWebServer.h>
 
+#include <ArduinoOTA.h>
 #include <ArduinoJson.h>
 #include "patternsManager.h"
 
@@ -17,10 +18,10 @@
 char last_modified[25];
 
 AsyncWebServer server = AsyncWebServer(HTTP_PORT);
+AsyncWebSocket ws("/ws");
 
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 PatternsManager pattern(&strip);
-AsyncWebSocket ws("/ws");
 
 void onHome(AsyncWebServerRequest *request) {
     // Check if the client already has the same version and respond with a 304 (Not modified)
@@ -161,8 +162,15 @@ void setup() {
 
     ws.onEvent(onWsEvent);
     server.addHandler(&ws);
+
+    ArduinoOTA.onEnd([]() {
+        ESP.reset();
+    });
+
+    ArduinoOTA.begin();
 }
 
 void loop() {
+    ArduinoOTA.handle();
     pattern.update();
 }
